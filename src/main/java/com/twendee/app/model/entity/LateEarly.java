@@ -1,6 +1,7 @@
 package com.twendee.app.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import java.util.Date;
 @Entity(name = "late_early")
 @Getter
 @Setter
-public class LateEarly extends BaseEntity{
+public class LateEarly extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +23,15 @@ public class LateEarly extends BaseEntity{
 
 
     //ngày muốn xin đến muộn/về sớm
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @Column(nullable = false)
     private Date date;
 
-    //số phút muốn xin đến muộn/về sớm
+    //số phút muốn xin đến muộn
     @Column(nullable = false)
-    private int time;
+    private int time_late = 0;
 
-    //xin đến muộn là false
-    //xin về sớm là true
+    //số phút muốn xin về sớm
     @Column(nullable = false)
-    private boolean type;
+    private int time_early = 0;
 }

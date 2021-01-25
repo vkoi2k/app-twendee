@@ -1,6 +1,7 @@
 package com.twendee.app.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,5 +26,6 @@ public class CheckoutSupport {
 
     //xin checkout hộ ngày
     @Column(nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date date;
 }
