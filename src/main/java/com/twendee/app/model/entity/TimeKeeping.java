@@ -22,10 +22,10 @@ public class TimeKeeping extends BaseEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date date;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Date checkin;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Date checkout;
 
 
