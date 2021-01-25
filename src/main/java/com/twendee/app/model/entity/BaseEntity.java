@@ -24,7 +24,7 @@ public class BaseEntity {
     @Setter
     @Getter
     @Column(name = "deleted")
-    protected boolean deleted;
+    protected boolean deleted = false;
 
 
     BaseEntity() {

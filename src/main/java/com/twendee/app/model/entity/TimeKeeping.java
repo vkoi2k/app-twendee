@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity(name = "timekeeping")
 @Getter
 @Setter
-public class TimeKeeping extends BaseEntity{
+public class TimeKeeping extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +19,14 @@ public class TimeKeeping extends BaseEntity{
     public Integer timeKeepingId;
 
     @Column(nullable = false, unique = true)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "GMT+07")
-            private Date date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private Date date;
 
     @Column(nullable = false)
     private Date checkin;
 
     @Column(nullable = false)
-            private Date checkout;
+    private Date checkout;
 
 
     @ManyToOne()

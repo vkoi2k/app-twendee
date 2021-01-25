@@ -29,13 +29,13 @@ public class User extends BaseEntity {
     private String cardId;
 
     @Column(nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "GMT+07")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date dob;
 
     @Column(nullable = true)
     private String address;
 
-    //mặc định sẽ là đường dẫn tới noimage.jpg
+    //mặc định sẽ là đường dẫn tới noImage.jpg
     @Column(nullable = false)
     private String avatar;
 

@@ -21,17 +21,15 @@ public class Request extends BaseEntity {
     @Column(name = "request_id")
     private Integer requestId;
 
-    @Column(nullable = false)
+    //thời gian gửi request
+    @Column(nullable = false, name = "time_request")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "GMT+07")
-    private Date date_request;
+    private Date timeRequest;
 
     @Column(nullable = true)
     private String reason;
 
-    @Column(nullable = false)
-    private boolean isApproved;
-
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean isAccept;
 
     @OneToOne
