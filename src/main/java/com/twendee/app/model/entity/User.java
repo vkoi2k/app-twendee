@@ -58,6 +58,10 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private boolean isVip;
 
+    //nam la true, nu la false
+    @Column(nullable = false)
+    private boolean gender;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<TimeKeeping> timeKeepings;
 

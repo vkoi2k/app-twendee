@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class EmailCheckin {
+public class EmailInput {
 
     private String email;
 }
