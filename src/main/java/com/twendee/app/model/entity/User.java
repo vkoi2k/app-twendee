@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import java.util.Date;
 import java.util.Set;
 
-@Data
 @Entity(name = "user")
 @Getter
 @Setter
@@ -60,6 +59,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<TimeKeeping> timeKeepings;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER,cascade=CascadeType.ALL)
     private Set<Request> requests;
 }

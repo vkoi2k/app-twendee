@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import java.util.Date;
 import java.util.Set;
 
-@Data
 @Entity(name = "request")
 @Getter
 @Setter
@@ -23,7 +22,7 @@ public class Request extends BaseEntity {
 
     //thời gian gửi request
     @Column(nullable = false, name = "time_request")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "GMT+07")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private Date timeRequest;
 
     @Column(nullable = true)
@@ -32,11 +31,11 @@ public class Request extends BaseEntity {
     @Column(nullable = true)
     private boolean isAccept;
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "absence_outside_id")
     private AbsenceOutside absenceOutside;
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "late_early_id")
     private LateEarly lateEarly;
 
@@ -44,7 +43,7 @@ public class Request extends BaseEntity {
     @JoinColumn(name = "checkout_support_id")
     private CheckoutSupport checkoutSupport;
 
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
