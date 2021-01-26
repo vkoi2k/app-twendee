@@ -7,6 +7,9 @@
 ##spring.datasource.driverClassName=com.mysql.jdbc.Driver
 
 spring:
+  jackson:
+    date-format: dd/MM/yyyy
+    time-zone: Asia/Saigon
   jpa:
     show-sql: true
     hibernate:
@@ -15,3 +18,6 @@ spring:
     url: jdbc:mysql://localhost:3306/app_twendee?UseSSL=false;
     username: root
     password: root
+
+#spring.jackson.date-format=dd/MM/yyyy
+#  spring.jackson.time-zone=Asia/Saigon
