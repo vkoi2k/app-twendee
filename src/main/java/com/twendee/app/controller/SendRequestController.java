@@ -44,7 +44,7 @@ public class SendRequestController {
 //        User user = sendRequestService.findByEmail(email);
         SendRequestTransform transform = new SendRequestTransform();
 //        Request r = transform.dayOff(user,sendRequestDayOffDTO);
-        Request r = transform.dayOff(sendRequestAbsenceOutsideDTO);
+        Request r = transform.outSide(sendRequestAbsenceOutsideDTO);
         sendRequestService.create(r);
         return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
     }
