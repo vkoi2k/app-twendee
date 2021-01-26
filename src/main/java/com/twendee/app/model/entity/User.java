@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+=======
 
 @Entity(name = "user")
 @Getter
@@ -61,6 +62,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<TimeKeeping> timeKeepings;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER,cascade=CascadeType.ALL)
     private Set<Request> requests;
 }

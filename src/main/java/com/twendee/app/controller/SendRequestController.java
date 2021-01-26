@@ -1,12 +1,15 @@
 package com.twendee.app.controller;
 
-import com.twendee.app.model.dto.SendRequestDTO;
+import com.twendee.app.model.dto.SendRequestAbsenceOutsideDTO;
+import com.twendee.app.model.dto.SendRequestLateEarlyDTO;
+import com.twendee.app.model.entity.Request;
 import com.twendee.app.service.SendRequestService;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.twendee.app.transform.SendRequestTransform;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/send-request")
 public class SendRequestController {
 
@@ -16,8 +19,33 @@ public class SendRequestController {
         this.sendRequestService = sendRequestService;
     }
 
-    @PostMapping("/dayoff")
-    public void createRequestDayOff(SendRequestDTO sendRequestDTO){
+    @PostMapping("/day-off")
+    public ResponseEntity<HttpStatus> createRequestDayOff(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
+//        User user = sendRequestService.findByEmail(email);
+        SendRequestTransform transform = new SendRequestTransform();
+//        Request r = transform.dayOff(user,sendRequestDayOffDTO);
+        Request r = transform.dayOff(sendRequestAbsenceOutsideDTO);
+        sendRequestService.create(r);
+        return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
+    }
 
+    @PostMapping("/late-early")
+    public ResponseEntity<HttpStatus> createRequestLateEarly(@RequestBody SendRequestLateEarlyDTO sendRequestLateEarlyDTO){
+//        User user = sendRequestService.findByEmail(email);
+        SendRequestTransform transform = new SendRequestTransform();
+//        Request r = transform.dayOff(user,sendRequestDayOffDTO);
+        Request r = transform.lateEarly(sendRequestLateEarlyDTO);
+        sendRequestService.create(r);
+        return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/out-side")
+    public ResponseEntity<HttpStatus> createRequestOutSide(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
+//        User user = sendRequestService.findByEmail(email);
+        SendRequestTransform transform = new SendRequestTransform();
+//        Request r = transform.dayOff(user,sendRequestDayOffDTO);
+        Request r = transform.dayOff(sendRequestAbsenceOutsideDTO);
+        sendRequestService.create(r);
+        return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
     }
 }
