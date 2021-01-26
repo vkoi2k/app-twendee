@@ -13,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
 
-@Data
 @Entity(name = "checkout_support")
 @Getter
 @Setter

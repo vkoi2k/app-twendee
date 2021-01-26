@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import java.util.Date;
 
-@Data
 @Entity(name = "absence_outside")
 @Getter
 @Setter
