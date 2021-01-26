@@ -9,7 +9,7 @@ import com.twendee.app.model.entity.User;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+import com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
 
 @Component
