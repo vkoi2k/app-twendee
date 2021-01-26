@@ -6,8 +6,11 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+
+=======
 
 @Entity(name = "user")
 @Getter
