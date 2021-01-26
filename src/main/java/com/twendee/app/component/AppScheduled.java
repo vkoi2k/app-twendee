@@ -16,8 +16,11 @@ import java.util.Date;
 import java.util.List;
 
 
-@Component
+
+
+//@Component
 public class AppScheduled {
+
     final
     UserRepository userRepository;
 
