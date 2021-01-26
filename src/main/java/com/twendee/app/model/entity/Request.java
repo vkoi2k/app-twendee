@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import java.util.Date;
 import java.util.Set;
 
-@Data
 @Entity(name = "request")
 @Getter
 @Setter
