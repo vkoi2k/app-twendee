@@ -4,14 +4,12 @@ import com.twendee.app.model.entity.TimeKeeping;
 import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.reponsitory.UserRepository;
-import com.twendee.app.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +39,7 @@ class AppApplicationTests {
                 System.out.println("tk: " + tk.getUser().getUserId());
                 userIds.add(tk.getUser().getUserId());
             }
-            List<User> users = userRepository.findByUserIdNotIn(userIds);
+            List<User> users = userRepository.findByUserIdNotInAndDeletedFalse(userIds);
             for (User user : users) {
                 System.out.println("id not in: "+user.getUserId());
             }
