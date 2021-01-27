@@ -12,14 +12,14 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    List<User> findByUserIdNotIn(List<Integer> userIds);
+    List<User> findByUserIdNotInAndDeletedFalse(List<Integer> userIds);
 
-    User getUserByEmail(String email);
+    User getUserByEmailAndDeletedFalse(String email);
 
-    Page<User> findAll(Pageable pageable);
-    List<User> findAll(Sort sort);
+    Page<User> findByDeletedFalse(Pageable pageable);
+    List<User> findByDeletedFalse(Sort sort);
 
-    List<User> findByNameLikeOrEmailLikeOrPhoneLike(String name, String email, String phone);
+    List<User> findByNameLikeOrEmailLikeOrPhoneLikeAndDeletedFalse(String name, String email, String phone);
 
 
 }

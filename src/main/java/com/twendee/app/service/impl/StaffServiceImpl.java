@@ -29,29 +29,36 @@ public class StaffServiceImpl implements StaffService {
 
     //get list off all staffs
     @Override
-    public ResponseEntity<List<UserDTO>> findAllUser(Integer page, Integer limit) {
+    public List<UserDTO> findAllUser(Integer page, Integer limit) {
         List<User> users = new ArrayList<>();
         if (page != null && limit != null) {
             Page<User> pages = userRepository.
-                    findAll(PageRequest.of(page, limit, Sort.by("name")));
+                    findByDeletedFalse(PageRequest.of(page, limit, Sort.by("name")));
             users = pages.toList();
         } else {
-            users = userRepository.findAll(Sort.by("name"));
+            users = userRepository.findByDeletedFalse(Sort.by("name"));
         }
         ModelMapper modelMapper = new ModelMapper();
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
             userDTOS.add(modelMapper.map(user, UserDTO.class));
         }
-        return ResponseEntity.ok(userDTOS);
+        return userDTOS;
     }
 
     //delete 1 staff, input is an id
     @Override
     public Message delete(Integer id) {
         try {
-            userRepository.deleteById(id);
-            return new Message("Delete successfully, staffId: " + id);
+            Optional<User> optionalUser=userRepository.findById(id);
+            if(optionalUser.isPresent()){
+                optionalUser.get().setDeleted(true);
+                userRepository.save(optionalUser.get());
+                return new Message("Delete successfully, staffId: " + id);
+            }else{
+                return new Message("userId: " + id+" is not found.");
+            }
+
         } catch (Exception e) {
             return new Message("Delete failed.");
         }
@@ -89,27 +96,28 @@ public class StaffServiceImpl implements StaffService {
 
     //search for staff by name, email or phone, input is string
     @Override
-    public ResponseEntity<List<UserDTO>> search(String KeyWord) {
-        List<User> users = userRepository.findByNameLikeOrEmailLikeOrPhoneLike(
+    public List<UserDTO> search(String KeyWord) {
+        List<User> users = userRepository.findByNameLikeOrEmailLikeOrPhoneLikeAndDeletedFalse(
                 "%" + KeyWord + "%", "%" + KeyWord + "%", "%" + KeyWord + "%");
         ModelMapper modelMapper = new ModelMapper();
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
             userDTOS.add(modelMapper.map(user, UserDTO.class));
         }
-        return ResponseEntity.ok(userDTOS);
+        return userDTOS;
     }
 
     @Override
-    public ResponseEntity<?> updateStaff(InputUserDTO userDTO, Integer id) {
+    public ResponseEntity<?> updateStaff(InputUserDTO inputUserDTO, Integer id) {
         try{
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration()
                     .setMatchingStrategy(MatchingStrategies.STRICT);
             Optional<User> optinalUser = userRepository.findById(id);
-            User user = optinalUser.get();
-            user = modelMapper.map(userDTO, User.class);
-            return ResponseEntity.ok(userRepository.save(user));
+            User user = modelMapper.map(inputUserDTO, User.class);
+            user.setUserId(optinalUser.get().getUserId());
+            user.setRole(optinalUser.get().isRole());
+            return ResponseEntity.ok(modelMapper.map(userRepository.save(user),UserDTO.class));
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.ok(new Message("update failed"));

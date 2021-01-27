@@ -52,7 +52,7 @@ public class AppScheduled {
                 System.out.println("tk: " + tk.getUser().getUserId());
                 userIds.add(tk.getUser().getUserId());
             }
-            List<User> users = userRepository.findByUserIdNotIn(userIds);
+            List<User> users = userRepository.findByUserIdNotInAndDeletedFalse(userIds);
             for (User user : users) {
                 TimeKeeping timeKeeping = new TimeKeeping();
                 timeKeeping.setUser(user);

@@ -23,11 +23,11 @@ public class AbsenceOutside extends BaseEntity {
 
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date start_date;
+    private Date startDate;
 
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date end_date;
+    private Date endDate;
 
     //absence (xin nghỉ) là true
     //outside là false

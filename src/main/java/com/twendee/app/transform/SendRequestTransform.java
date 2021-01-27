@@ -16,8 +16,8 @@ public class SendRequestTransform {
         request.setReason(sendRequestAbsenceOutsideDTO.getReason());
         AbsenceOutside outside = new AbsenceOutside();
         outside.setType(true);
-        outside.setStart_date(sendRequestAbsenceOutsideDTO.getStart_date());
-        outside.setEnd_date(sendRequestAbsenceOutsideDTO.getEnd_date());
+        outside.setStartDate(sendRequestAbsenceOutsideDTO.getStart_date());
+        outside.setEndDate(sendRequestAbsenceOutsideDTO.getEnd_date());
         request.setAbsenceOutside(outside);
 //        request.setUser(sendRequestDayOffDTO.getUser());
         return request;
@@ -39,8 +39,8 @@ public class SendRequestTransform {
         request.setReason(sendRequestAbsenceOutsideDTO.getReason());
         AbsenceOutside outside = new AbsenceOutside();
         outside.setType(false);
-        outside.setStart_date(sendRequestAbsenceOutsideDTO.getStart_date());
-        outside.setEnd_date(sendRequestAbsenceOutsideDTO.getEnd_date());
+        outside.setStartDate(sendRequestAbsenceOutsideDTO.getStart_date());
+        outside.setEndDate(sendRequestAbsenceOutsideDTO.getEnd_date());
         request.setAbsenceOutside(outside);
 //        request.setUser(sendRequestDayOffDTO.getUser());
         return request;

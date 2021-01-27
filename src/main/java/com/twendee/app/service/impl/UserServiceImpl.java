@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> userCheckin(String email) {
         try {
-            Optional<User> user = Optional.ofNullable(userRepository.getUserByEmail(email));
+            Optional<User> user = Optional.ofNullable(userRepository.getUserByEmailAndDeletedFalse(email));
             System.out.println("userID: " + user.get().getUserId());
             SimpleDateFormat DateToString = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> userCheckout(String email) {
         try {
-            User user = userRepository.getUserByEmail(email);
+            User user = userRepository.getUserByEmailAndDeletedFalse(email);
             SimpleDateFormat DateToString = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date date = new Date();
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> userHistory(HistoryInput historyInput, Integer start, Integer limit) {
         try {
-            User user = userRepository.getUserByEmail(historyInput.getEmail());
+            User user = userRepository.getUserByEmailAndDeletedFalse(historyInput.getEmail());
             List<TimeKeeping> timeKeepingList;
             SimpleDateFormat DateToString = new SimpleDateFormat("01/MM/yyyy");
             SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
