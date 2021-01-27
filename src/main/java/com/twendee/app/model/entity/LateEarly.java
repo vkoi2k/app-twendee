@@ -28,9 +28,9 @@ public class LateEarly extends BaseEntity {
 
     //số phút muốn xin đến muộn
     @Column(nullable = false)
-    private int time_late = 0;
+    private int timeLate = 0;
 
     //số phút muốn xin về sớm
     @Column(nullable = false)
-    private int time_early = 0;
+    private int timeEarly = 0;
 }
