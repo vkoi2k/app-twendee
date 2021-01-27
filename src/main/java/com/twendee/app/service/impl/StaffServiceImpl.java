@@ -50,10 +50,10 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public Message delete(Integer id) {
         try {
-            Optional<User> optionalUser=userRepository.findById(id);
-            if(optionalUser.isPresent()){
-                optionalUser.get().setDeleted(true);
-                userRepository.save(optionalUser.get());
+            User optionalUser=userRepository.findByUserIdAndDeletedFalse(id);
+            if(optionalUser !=null){
+                optionalUser.setDeleted(true);
+                userRepository.save(optionalUser);
                 return new Message("Delete successfully, staffId: " + id);
             }else{
                 return new Message("userId: " + id+" is not found.");
@@ -85,9 +85,9 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public ResponseEntity<?> getDetail(Integer id) {
         try {
-            Optional<User> user = userRepository.findById(id);
+            User user = userRepository.findByUserIdAndDeletedFalse(id);
             ModelMapper modelMapper = new ModelMapper();
-            UserDTO userDTO = modelMapper.map(user.get(), UserDTO.class);
+            UserDTO userDTO = modelMapper.map(user, UserDTO.class);
             return ResponseEntity.ok(userDTO);
         } catch (Exception e) {
             return ResponseEntity.ok(new Message("staff not found."));
@@ -113,10 +113,10 @@ public class StaffServiceImpl implements StaffService {
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration()
                     .setMatchingStrategy(MatchingStrategies.STRICT);
-            Optional<User> optinalUser = userRepository.findById(id);
+            User optinalUser = userRepository.findByUserIdAndDeletedFalse(id);
             User user = modelMapper.map(inputUserDTO, User.class);
-            user.setUserId(optinalUser.get().getUserId());
-            user.setRole(optinalUser.get().isRole());
+            user.setUserId(optinalUser.getUserId());
+            user.setRole(optinalUser.isRole());
             return ResponseEntity.ok(modelMapper.map(userRepository.save(user),UserDTO.class));
         }catch (Exception e){
             e.printStackTrace();
