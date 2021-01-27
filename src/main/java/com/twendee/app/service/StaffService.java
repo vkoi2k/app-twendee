@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 public interface StaffService {
-    ResponseEntity<List<UserDTO>> findAllUser(Integer start, Integer limit);
+    List<UserDTO> findAllUser(Integer start, Integer limit);
 
     Message delete(Integer id);
 
@@ -18,7 +18,7 @@ public interface StaffService {
 
     ResponseEntity<?> getDetail(Integer id);
 
-    ResponseEntity<List<UserDTO>> search(String KeyWord);
+    List<UserDTO> search(String KeyWord);
 
     ResponseEntity<?> updateStaff(InputUserDTO inputUserDTO, Integer id);
 

@@ -23,4 +23,5 @@ public class UserDTO {
     private boolean role;
     private boolean isVip;
     private String position;
+    private boolean gender;
 }

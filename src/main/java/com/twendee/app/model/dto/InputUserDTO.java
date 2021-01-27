@@ -23,4 +23,5 @@ public class InputUserDTO {
     //private boolean role;
     private boolean isVip;
     private String position;
+    private boolean gender;
 }

@@ -41,7 +41,7 @@ class AppApplicationTests {
                 System.out.println("tk: " + tk.getUser().getUserId());
                 userIds.add(tk.getUser().getUserId());
             }
-            List<User> users = userRepository.findByUserIdNotIn(userIds);
+            List<User> users = userRepository.findByUserIdNotInAndDeletedFalse(userIds);
             for (User user : users) {
                 System.out.println("id not in: "+user.getUserId());
             }
