@@ -10,6 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class UserDTO {
+    private Integer userId;
     private String name;
     private String cardId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")

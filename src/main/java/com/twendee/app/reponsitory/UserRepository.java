@@ -22,5 +22,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Page<User> findAll(Pageable pageable);
     List<User> findAll(Sort sort);
 
+    List<User> findByNameLikeOrEmailLikeOrPhoneLike(String name, String email, String phone);
+
 
 }
