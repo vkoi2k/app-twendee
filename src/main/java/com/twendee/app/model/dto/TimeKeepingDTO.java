@@ -2,10 +2,7 @@ package com.twendee.app.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.twendee.app.model.entity.TimeKeeping;
-import com.twendee.app.model.entity.User;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.text.ParseException;
@@ -15,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class TimeKeepingDTO {
-    private User user;
+    private String username;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date date;
@@ -31,7 +28,7 @@ public class TimeKeepingDTO {
     //số phút về sớm
     private int timeEarly;
     public TimeKeepingDTO(TimeKeeping timeKeeping) throws ParseException {
-        this.user=timeKeeping.getUser();
+        this.username=timeKeeping.getUser().getName();
         this.date=timeKeeping.getDate();
         this.checkin=timeKeeping.getCheckin();
         this.checkout=timeKeeping.getCheckout();
