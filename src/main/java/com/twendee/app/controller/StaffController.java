@@ -1,6 +1,7 @@
 package com.twendee.app.controller;
 
 import com.twendee.app.model.dto.InputUserDTO;
+import com.twendee.app.model.dto.Message;
 import com.twendee.app.model.dto.UserDTO;
 import com.twendee.app.model.entity.User;
 import com.twendee.app.service.StaffService;
@@ -32,26 +33,30 @@ public class StaffController {
 
     //delete 1 staff, input is id
     @DeleteMapping("/staffs/{id}")
-    public ResponseEntity delete(@PathVariable int id){
-        userService.delete(id);
-        return ResponseEntity.ok().build();
+    public Message delete(@PathVariable Integer id){
+        return userService.delete(id);
     }
 
-    //add staff, input is user entity
-//    @PostMapping("/staffs")
-//    public  add(@ResponseBody InputUserDTO inputUserDTO){
-//
-//    }
+    @PostMapping("/staffs")
+    public Message addStaff(@RequestBody InputUserDTO inputUserDTO){
+        return userService.addStaff(inputUserDTO);
+    }
 
     //get detail staff, input is id
-    @GetMapping("staffs/{id}")
-    public User getDetail(@PathVariable int id){
+    @GetMapping("/staffs/{id}")
+    public ResponseEntity<?> getDetail(@PathVariable Integer id){
         return userService.getDetail(id);
     }
 
     //search by name, email or phone, input is string
-    @GetMapping("staffs?search={search}")
-    public List<User> search(@PathVariable String search){
+    @GetMapping(value = "/staffs", params = "search")
+    public ResponseEntity<List<UserDTO>> search(@RequestParam String search){
         return userService.search(search);
+    }
+
+    @PostMapping("/staffs/{id}")
+    public ResponseEntity<?> updateStaff(@PathVariable Integer id,
+                               @RequestBody InputUserDTO inputUserDTO){
+        return userService.updateStaff(inputUserDTO, id);
     }
 }
