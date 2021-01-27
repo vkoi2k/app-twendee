@@ -58,7 +58,6 @@ public class StaffServiceImpl implements StaffService {
             }else{
                 return new Message("userId: " + id+" is not found.");
             }
-
         } catch (Exception e) {
             return new Message("Delete failed.");
         }

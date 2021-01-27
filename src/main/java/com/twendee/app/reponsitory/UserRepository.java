@@ -22,6 +22,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findByNameLikeOrEmailLikeOrPhoneLikeAndDeletedFalse(String name, String email, String phone);
 
     User findByUserIdAndDeletedFalse(Integer userId);
-
-
 }
