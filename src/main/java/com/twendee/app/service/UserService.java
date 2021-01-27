@@ -11,4 +11,6 @@ public interface UserService {
     ResponseEntity<?> userCheckin(String email);
     ResponseEntity<?> userCheckout(String email);
     ResponseEntity<?> userHistory(HistoryInput historyInput, Integer start, Integer limit);
+
+
 }
