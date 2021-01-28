@@ -27,6 +27,10 @@ public class TimeKeepingDTO {
     private int timeLate;
     //số phút về sớm
     private int timeEarly;
+
+    //ghi chú
+    private String note;
+
     public TimeKeepingDTO(TimeKeeping timeKeeping) throws ParseException {
         this.username=timeKeeping.getUser().getName();
         this.date=timeKeeping.getDate();
@@ -48,5 +52,17 @@ public class TimeKeepingDTO {
         if(early>0){
             this.timeEarly=Math.round(early/60000);
         }else this.timeEarly=0;
+
+        if(timeKeeping.getRequest() !=null){
+            if(timeKeeping.getRequest().getLateEarly()!=null){
+                this.note="Xin đi muộn/về sớm";
+            }else if(timeKeeping.getRequest().getAbsenceOutside()!=null){
+                if(timeKeeping.getRequest().getAbsenceOutside().isType())
+                    this.note="Xin nghỉ";
+                else this.note="Xin đi outside";
+            }else if(timeKeeping.getRequest().getCheckoutSupport()!=null){
+                    this.note="Checkout bù";
+            }
+        }
     }
 }

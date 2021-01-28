@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface UserService {
-    ResponseEntity<?> userCheckin(String email);
-    ResponseEntity<?> userCheckout(String email);
+    Message userCheckin(String email);
+    Message userCheckout(String email);
     ResponseEntity<?> userHistory(HistoryInput historyInput, Integer start, Integer limit);
 
 
