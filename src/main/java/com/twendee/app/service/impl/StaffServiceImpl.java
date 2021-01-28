@@ -35,7 +35,7 @@ public class StaffServiceImpl implements StaffService {
     //get list off all staffs
     @Override
     public List<UserDTO> findAllUser(Integer page, Integer limit) {
-        List<User> users = new ArrayList<>();
+        List<User> users;
         if (page != null && limit != null) {
             Page<User> pages = userRepository.
                     findByDeletedFalse(PageRequest.of(page, limit, Sort.by("name")));
@@ -121,10 +121,11 @@ public class StaffServiceImpl implements StaffService {
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration()
                     .setMatchingStrategy(MatchingStrategies.STRICT);
-            User optinalUser = userRepository.findByUserIdAndDeletedFalse(id);
+            User oldUser = userRepository.findByUserIdAndDeletedFalse(id);
             User user = modelMapper.map(inputUserDTO, User.class);
-            user.setUserId(optinalUser.getUserId());
-            user.setRole(optinalUser.isRole());
+            user.setUserId(oldUser.getUserId());
+            user.setRole(oldUser.isRole());
+            user.setPass(oldUser.getPass());
             user.setDob(sdf.parse(inputUserDTO.getBirthday()));
             return ResponseEntity.ok(modelMapper.map(userRepository.save(user),UserDTO.class));
         }catch (Exception e){
@@ -132,6 +133,4 @@ public class StaffServiceImpl implements StaffService {
             return ResponseEntity.ok(new Message("update failed"));
         }
     }
-
-
 }
