@@ -12,11 +12,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @RestController
 public class AuthController {
@@ -32,7 +37,7 @@ public class AuthController {
 		this.userRepository = userRepository;
 	}
 	
-	@PostMapping(value = "/authenticate")
+	@PostMapping(value = "/login")
 	public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 		System.out.println("Auth" + loginRequest.toString());
 		Authentication authentication = authenticationManager
@@ -42,8 +47,14 @@ public class AuthController {
 				);
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		securityContext.setAuthentication(authentication);
+
 		String jwt = jwtTokenProvider.generateToken((CustomUserDetail) authentication.getPrincipal());
 		System.out.println("Auth"+authentication);
-		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+		Collection<? extends GrantedAuthority> role = authentication.getAuthorities();
+		List<String> roles = new ArrayList<>();
+		for(GrantedAuthority grantedAuthority : role) {
+			roles.add(grantedAuthority.getAuthority());
+		}
+		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, roles));
 	}
 }
