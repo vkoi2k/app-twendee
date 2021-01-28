@@ -8,6 +8,8 @@ import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.StaffService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +34,7 @@ public class StaffServiceImpl implements StaffService {
         this.userRepository = userRepository;
     }
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(StaffServiceImpl.class);
     //get list off all staffs
     @Override
     public List<UserDTO> findAllUser(Integer page, Integer limit) {
@@ -84,6 +87,7 @@ public class StaffServiceImpl implements StaffService {
             return new Message("Add staff successfully, userId: " + user.getUserId().toString());
         } catch (Exception e) {
             e.printStackTrace();
+            LOGGER.error(e.toString());
             return new Message("ADD_USER_FALIED");
         }
     }
