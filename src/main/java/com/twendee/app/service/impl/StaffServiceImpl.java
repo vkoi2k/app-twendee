@@ -15,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,11 +69,13 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public Message addStaff(InputUserDTO inputUserDTO) {
         try {
+            SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration()
                     .setMatchingStrategy(MatchingStrategies.STRICT);
             User user = modelMapper.map(inputUserDTO, User.class);
             user.setRole(false);
+            user.setDob(sdf.parse(inputUserDTO.getBirthday()));
             User newUser = userRepository.save(user);
             return new Message("Add staff successfully, userId: " + newUser.getUserId().toString());
         } catch (Exception e) {
@@ -109,6 +113,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public ResponseEntity<?> updateStaff(InputUserDTO inputUserDTO, Integer id) {
         try{
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration()
                     .setMatchingStrategy(MatchingStrategies.STRICT);
@@ -116,6 +121,7 @@ public class StaffServiceImpl implements StaffService {
             User user = modelMapper.map(inputUserDTO, User.class);
             user.setUserId(optinalUser.getUserId());
             user.setRole(optinalUser.isRole());
+            user.setDob(sdf.parse(inputUserDTO.getBirthday()));
             return ResponseEntity.ok(modelMapper.map(userRepository.save(user),UserDTO.class));
         }catch (Exception e){
             e.printStackTrace();

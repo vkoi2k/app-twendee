@@ -13,8 +13,7 @@ import java.util.Date;
 public class InputUserDTO {
     private String name;
     private String cardId;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date dob;
+    private String birthday;
     private String email;
     private String pass;
     private String address;
