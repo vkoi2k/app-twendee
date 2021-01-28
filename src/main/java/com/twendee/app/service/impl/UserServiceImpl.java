@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> userCheckin(String email) {
+    public Message userCheckin(String email) {
         try {
             Optional<User> user = Optional.ofNullable(userRepository.getUserByEmailAndDeletedFalse(email));
             System.out.println("userID: " + user.get().getUserId());
@@ -54,19 +54,19 @@ public class UserServiceImpl implements UserService {
                 if (timeKeeping.getCheckin() == null) {
                     timeKeeping.setCheckin(new Date());
                     timeKeepingRepository.save(timeKeeping);
-                    return ResponseEntity.ok(new Message("Checkin successful"));
+                    return new Message("Checkin successful");
                 }
-                return ResponseEntity.ok(new Message("You checked in at: " + timeKeeping.getCheckin().toString()));
+                return new Message("You checked in at: " + timeKeeping.getCheckin().toString());
             }
         } catch (Exception ex) {
             //ex.printStackTrace();
-            return ResponseEntity.ok(new Message("Checkin failed"));
+            return new Message("Checkin failed");
         }
-        return ResponseEntity.ok(new Message("Checkin failed"));
+        return new Message("Checkin failed");
     }
 
     @Override
-    public ResponseEntity<?> userCheckout(String email) {
+    public Message userCheckout(String email) {
         try {
             User user = userRepository.getUserByEmailAndDeletedFalse(email);
             SimpleDateFormat DateToString = new SimpleDateFormat("dd/MM/yyyy");
@@ -80,21 +80,21 @@ public class UserServiceImpl implements UserService {
                     );
             if (timeKeeping != null) {
                 if (timeKeeping.getCheckin() == null) {
-                    return ResponseEntity.ok(new Message("You must checkin before checkout."));
+                    return new Message("You must checkin before checkout.");
                 } else {
                     if (timeKeeping.getCheckout() == null) {
                         timeKeeping.setCheckout(new Date());
                         timeKeepingRepository.save(timeKeeping);
-                        return ResponseEntity.ok(new Message("Checkout successful"));
+                        return new Message("Checkout successful");
                     }
-                    return ResponseEntity.ok(new Message("You checked out at: " + timeKeeping.getCheckout().toString()));
+                    return new Message("You checked out at: " + timeKeeping.getCheckout().toString());
                 }
             }
         } catch (Exception ex) {
             //ex.printStackTrace();
-            return ResponseEntity.ok(new Message("Checkout failed"));
+            return new Message("Checkout failed");
         }
-        return ResponseEntity.ok(new Message("Checkout failed"));
+        return new Message("Checkout failed");
     }
 
     @Override
