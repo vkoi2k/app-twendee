@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,8 +32,8 @@ public class AuthController {
 		this.userRepository = userRepository;
 	}
 	
-	@PostMapping(value = "/authenticate", produces = {"application/json"}, consumes = {"application/x-www-form-urlencoded"})
-	public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
+	@PostMapping(value = "/authenticate")
+	public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 		System.out.println("Auth" + loginRequest.toString());
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(

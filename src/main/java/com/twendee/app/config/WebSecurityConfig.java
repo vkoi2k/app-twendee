@@ -4,6 +4,7 @@ package com.twendee.app.config;
 import com.twendee.app.service.impl.UserDetailServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,33 +28,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().authorizeRequests()
-				.antMatchers("/login*", "/authenticate").permitAll()
-				.antMatchers("/v2/api-docs",
-						"/swagger-resources",
-						"/swagger-resources/**",
-						"/configuration/ui",
-						"/configuration/security",
-						"/swagger-ui.html",
-						"/webjars/**", "../static/**").permitAll()
-//				.antMatchers("/admin/*").hasAuthority("ROLE_ADMIN")
-//				.antMatchers("/student/*").hasAuthority("ROLE_USER")
+		http.cors()
+                .and().csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/authenticate")
+                .permitAll()
+                .antMatchers("/v3/api-docs",
+                        "/swagger-ui.html",
+                        "/v2/api-docs",
+                        "/swagger-resources",
+                        "/swagger-resources/**",
+                        "/configuration/ui",
+                        "/configuration/security",
+                        "/swagger-ui/**",
+                        "/webjars/**",
+                        "/resources/**").permitAll()
+                .anyRequest().permitAll();
 
-				.anyRequest().permitAll()
-				.and()
-				.formLogin()
-				.loginPage("/login")
-				.loginProcessingUrl("/authenticate")
-				.successHandler(getAuthenticationSuccessHandler())
-				.failureUrl("/login?error=true")
-				.and()
-				.logout()
-				.logoutUrl("/logout")
-				.and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+
+               
 		
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
+
+
 	
 	@Bean
 	@Override

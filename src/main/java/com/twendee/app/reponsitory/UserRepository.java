@@ -24,4 +24,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User findByUserIdAndDeletedFalse(Integer userId);
 
 
+    User getUserByEmail(String email);
+
+
 }

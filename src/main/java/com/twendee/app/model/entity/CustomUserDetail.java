@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomUserDetail implements UserDetails {
 
+
     User user;
     private List<GrantedAuthority> authorities;
 

@@ -8,10 +8,12 @@ import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.StaffService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -24,7 +26,8 @@ import java.util.Optional;
 @Service
 public class StaffServiceImpl implements StaffService {
     private final UserRepository userRepository;
-
+    @Autowired
+    PasswordEncoder passwordEncoder;
     public StaffServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -75,12 +78,13 @@ public class StaffServiceImpl implements StaffService {
                     .setMatchingStrategy(MatchingStrategies.STRICT);
             User user = modelMapper.map(inputUserDTO, User.class);
             user.setRole(false);
+            user.setPass(passwordEncoder.encode(inputUserDTO.getPass()));
             user.setDob(sdf.parse(inputUserDTO.getBirthday()));
-            User newUser = userRepository.save(user);
-            return new Message("Add staff successfully, userId: " + newUser.getUserId().toString());
+           userRepository.save(user);
+            return new Message("Add staff successfully, userId: " + user.getUserId().toString());
         } catch (Exception e) {
             e.printStackTrace();
-            return new Message("Add staff failed.");
+            return new Message("ADD_USER_FALIED");
         }
     }
 
