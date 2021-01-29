@@ -12,17 +12,20 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    //get All user chưa tạo instance timekeeping trong ngày hôm đó
-//    @Query(value = "SELECT * FROM user u WHERE u.user_id NOT IN (SELECT t.user_id FROM timekeeping t WHERE cast(t.date as date) = :date )", nativeQuery = true)
-//    List<User> getUserNotIn(@Param("date") Date date);
-    List<User> findByUserIdNotIn(List<Integer> userIds);
+    List<User> findByUserIdNotInAndDeletedFalse(List<Integer> userIds);
+
+    User getUserByEmailAndDeletedFalse(String email);
+
+    Page<User> findByDeletedFalse(Pageable pageable);
+    List<User> findByDeletedFalse(Sort sort);
+
+    List<User> findByDeletedFalseAndNameLike(String name);
+    Page<User> findByDeletedFalseAndNameLike(String name, Pageable pageable);
+
+    User findByUserIdAndDeletedFalse(Integer userId);
+
 
     User getUserByEmail(String email);
-
-    Page<User> findAll(Pageable pageable);
-    List<User> findAll(Sort sort);
-
-    List<User> findByNameLikeOrEmailLikeOrPhoneLike(String name, String email, String phone);
 
 
 }

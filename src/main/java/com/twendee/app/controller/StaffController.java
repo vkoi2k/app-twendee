@@ -24,7 +24,7 @@ public class StaffController {
     //page là số trang bắt đầu từ 0
     //limit là số bản ghi trong 1 trang
     @GetMapping("/staffs")
-    public ResponseEntity<List<UserDTO>> getAllUsers(
+    public List<UserDTO> getAllUsers(
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "limit", required = false) Integer limit
             ) {
@@ -50,8 +50,10 @@ public class StaffController {
 
     //search by name, email or phone, input is string
     @GetMapping(value = "/staffs", params = "search")
-    public ResponseEntity<List<UserDTO>> search(@RequestParam String search){
-        return userService.search(search);
+    public List<UserDTO> search(@RequestParam String search,
+                                @RequestParam(value = "page", required = false) Integer page,
+                                @RequestParam(value = "limit", required = false) Integer limit){
+        return userService.search(search, page, limit);
     }
 
     @PostMapping("/staffs/{id}")
