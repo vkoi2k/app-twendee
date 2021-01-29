@@ -13,7 +13,7 @@ import java.util.Date;
 public class InputUserDTO {
     private String name;
     private String cardId;
-    private String birthday;
+    private long birthday;
     private String email;
     private String pass;
     private String address;

@@ -50,10 +50,14 @@ class AppApplicationTests {
 
     @Test
     void linhTinh(){
-        SimpleDateFormat DateToString = new SimpleDateFormat("01/MM/yyyy");
-        SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date = new Date();
-        System.out.println(DateToString.format(date) + " 00:00:00");
+        SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date=new Date();
+        System.out.println("truoc convert: "+sdf.format(date));
+        System.out.println("thoi gian: "+date.getTime());
+        long milisecon= date.getTime();
+        Date date1=new Date(milisecon);
+        System.out.println("sau convert: "+sdf.format(date1));
+
     }
 
 }
