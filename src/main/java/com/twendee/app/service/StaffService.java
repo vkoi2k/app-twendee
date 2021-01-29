@@ -14,7 +14,7 @@ public interface StaffService {
 
     Message delete(Integer id);
 
-    Message addStaff(InputUserDTO inputUserDTO);
+    ResponseEntity<?> addStaff(InputUserDTO inputUserDTO);
 
     ResponseEntity<?> getDetail(Integer id);
 
