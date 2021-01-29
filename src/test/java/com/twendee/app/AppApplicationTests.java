@@ -1,12 +1,20 @@
 package com.twendee.app;
 
+import com.twendee.app.model.dto.UserDTO;
 import com.twendee.app.model.entity.TimeKeeping;
 import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.reponsitory.UserRepository;
+import com.twendee.app.service.StaffService;
+import com.twendee.app.service.UserService;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +28,9 @@ class AppApplicationTests {
 
     @Autowired
     TimeKeepingRepository timeKeepingRepository;
+
+    @Autowired
+    StaffService staffService;
 
     @Test
     void contextLoads() {
@@ -50,13 +61,17 @@ class AppApplicationTests {
 
     @Test
     void linhTinh(){
-        SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date=new Date();
-        System.out.println("truoc convert: "+sdf.format(date));
-        System.out.println("thoi gian: "+date.getTime());
-        long milisecon= date.getTime();
-        Date date1=new Date(milisecon);
-        System.out.println("sau convert: "+sdf.format(date1));
+        List<User> users = userRepository.findByDeletedFalse(Sort.by("name"));
+
+//tạo resource + thêm link
+//        EntityModel<User> resource = EntityModel.of(user);
+//        resource.add(linkTo.withRel("all-users"));
+////lấy link (set thế này thì khi thay đổi uri của method thì link này cũng đổi theo)
+//        WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).tenMethod());    //class.method
+//import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+//import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
+
+
 
     }
 

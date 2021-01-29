@@ -77,7 +77,7 @@ public class StaffServiceImpl implements StaffService {
 
     //add new user, input is user entity
     @Override
-    public Message addStaff(InputUserDTO inputUserDTO) {
+    public ResponseEntity<?> addStaff(InputUserDTO inputUserDTO) {
         try {
             SimpleDateFormat sdf =new SimpleDateFormat("");
             ModelMapper modelMapper = new ModelMapper();
@@ -87,12 +87,13 @@ public class StaffServiceImpl implements StaffService {
             user.setRole(false);
             user.setPass(passwordEncoder.encode(inputUserDTO.getPass()));
             user.setDob(new Date(inputUserDTO.getBirthday()));
-           userRepository.save(user);
-            return new Message("Add staff successfully, userId: " + user.getUserId().toString());
+            UserDTO newUserDTO=modelMapper.map(userRepository.save(user),UserDTO.class);
+            newUserDTO.setBirthday(user.getDob().getTime());
+            return ResponseEntity.ok(newUserDTO);
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error(e.toString());
-            return new Message("ADD_USER_FALIED");
+            return ResponseEntity.badRequest().body(new Message("ADD_USER_FAILED"));
         }
     }
 
@@ -155,7 +156,7 @@ public class StaffServiceImpl implements StaffService {
             return ResponseEntity.ok(updatedUserDTO);
         }catch (Exception e){
             e.printStackTrace();
-            return ResponseEntity.ok(new Message("update failed"));
+            return ResponseEntity.badRequest().body(new Message("update failed"));
         }
     }
 }

@@ -38,7 +38,7 @@ public class StaffController {
     }
 
     @PostMapping("/staffs")
-    public Message addStaff(@RequestBody InputUserDTO inputUserDTO){
+    public ResponseEntity<?> addStaff(@RequestBody InputUserDTO inputUserDTO){
         return userService.addStaff(inputUserDTO);
     }
 
