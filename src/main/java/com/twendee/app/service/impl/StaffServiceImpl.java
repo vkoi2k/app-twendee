@@ -47,9 +47,13 @@ public class StaffServiceImpl implements StaffService {
             users = userRepository.findByDeletedFalse(Sort.by("name"));
         }
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT);
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
-            userDTOS.add(modelMapper.map(user, UserDTO.class));
+            UserDTO userDTO=modelMapper.map(user, UserDTO.class);
+            userDTO.setBirthday(user.getDob().getTime());
+            userDTOS.add(userDTO);
         }
         return userDTOS;
     }
@@ -75,14 +79,14 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public Message addStaff(InputUserDTO inputUserDTO) {
         try {
-            SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf =new SimpleDateFormat("");
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration()
                     .setMatchingStrategy(MatchingStrategies.STRICT);
             User user = modelMapper.map(inputUserDTO, User.class);
             user.setRole(false);
             user.setPass(passwordEncoder.encode(inputUserDTO.getPass()));
-            user.setDob(sdf.parse(inputUserDTO.getBirthday()));
+            user.setDob(new Date(inputUserDTO.getBirthday()));
            userRepository.save(user);
             return new Message("Add staff successfully, userId: " + user.getUserId().toString());
         } catch (Exception e) {
@@ -98,7 +102,10 @@ public class StaffServiceImpl implements StaffService {
         try {
             User user = userRepository.findByUserIdAndDeletedFalse(id);
             ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration()
+                    .setMatchingStrategy(MatchingStrategies.STRICT);
             UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+            userDTO.setBirthday(user.getDob().getTime());
             return ResponseEntity.ok(userDTO);
         } catch (Exception e) {
             return ResponseEntity.ok(new Message("staff not found."));
@@ -117,11 +124,14 @@ public class StaffServiceImpl implements StaffService {
         }else
          users = userRepository.findByDeletedFalseAndNameLike(
                 "%" + KeyWord + "%");
-
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT);
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
-            userDTOS.add(modelMapper.map(user, UserDTO.class));
+            UserDTO userDTO=modelMapper.map(user, UserDTO.class);
+            userDTO.setBirthday(user.getDob().getTime());
+            userDTOS.add(userDTO);
         }
         return userDTOS;
     }
@@ -138,8 +148,11 @@ public class StaffServiceImpl implements StaffService {
             user.setUserId(oldUser.getUserId());
             user.setRole(oldUser.isRole());
             user.setPass(oldUser.getPass());
-            user.setDob(sdf.parse(inputUserDTO.getBirthday()));
-            return ResponseEntity.ok(modelMapper.map(userRepository.save(user),UserDTO.class));
+            user.setDob(new Date(inputUserDTO.getBirthday()));
+
+            UserDTO updatedUserDTO=modelMapper.map(userRepository.save(user),UserDTO.class);
+            updatedUserDTO.setBirthday(user.getDob().getTime());
+            return ResponseEntity.ok(updatedUserDTO);
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.ok(new Message("update failed"));
