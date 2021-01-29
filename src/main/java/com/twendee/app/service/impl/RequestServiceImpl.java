@@ -1,15 +1,15 @@
 package com.twendee.app.service.impl;
 
+import com.twendee.app.model.dto.Message;
 import com.twendee.app.model.dto.RequestDTO;
 import com.twendee.app.model.entity.Request;
-import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.RequestRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.RequestService;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,7 +30,6 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<RequestDTO> findAll(Integer page, Integer limit) {
         List<Request> requests;
-        ModelMapper modelMapper = new ModelMapper();
         if (page != null && limit != null) {
             Page<Request> pages = requestRepository.
                     findAll(PageRequest.of(page, limit, Sort.by("requestId")));
@@ -46,7 +45,14 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Optional<Request> findById(Integer id) {
-        return requestRepository.findById(id);
+    public ResponseEntity<?> findById(Integer id) {
+        try {
+            Optional<Request> request = requestRepository.findById(id);
+            RequestDTO requestDTO = new RequestDTO(request.get());
+            return ResponseEntity.ok(requestDTO);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.ok(new Message("Request not found."));
+        }
     }
 }

@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Optional;
 
 @Service
 public class SendRequestServiceImpl implements SendRequestService {
@@ -84,10 +83,4 @@ public class SendRequestServiceImpl implements SendRequestService {
             return new Message("Send request failed");
         }
     }
-
-
-//    @Override
-//    public User findByEmail(String email) {
-//        return sendRequestRepository.findByEmail(email);
-//    }
 }

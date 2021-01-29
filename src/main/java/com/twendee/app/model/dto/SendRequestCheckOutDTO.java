@@ -14,9 +14,4 @@ public class SendRequestCheckOutDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date date;
     private String email;
-    public SendRequestCheckOutDTO(){}
-    public SendRequestCheckOutDTO(Request request){
-        this.date = request.getCheckoutSupport().getDate();
-        this.email = request.getUser().getEmail();
-    }
 }

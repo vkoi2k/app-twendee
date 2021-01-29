@@ -3,6 +3,7 @@ package com.twendee.app.controller;
 import com.twendee.app.model.dto.RequestDTO;
 import com.twendee.app.model.entity.Request;
 import com.twendee.app.service.RequestService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class RequestController {
     }
 
     @GetMapping("/requests/{id}")
-    public Optional<Request> getDetail(@PathVariable Integer id){
+    public ResponseEntity<?> getDetail(@PathVariable Integer id){
         return requestService.findById(id);
     }
 
