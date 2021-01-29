@@ -39,7 +39,7 @@ public class Request extends BaseEntity {
     @JoinColumn(name = "late_early_id")
     private LateEarly lateEarly;
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "checkout_support_id")
     private CheckoutSupport checkoutSupport;
 
