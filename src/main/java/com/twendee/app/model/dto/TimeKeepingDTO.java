@@ -17,11 +17,9 @@ public class TimeKeepingDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date date;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-    private Date checkin;
+    private long checkin;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-    private Date checkout;
+    private long checkout;
 
     //số phút đến muộn
     private int timeLate;
@@ -34,8 +32,8 @@ public class TimeKeepingDTO {
     public TimeKeepingDTO(TimeKeeping timeKeeping) throws ParseException {
         this.username=timeKeeping.getUser().getName();
         this.date=timeKeeping.getDate();
-        this.checkin=timeKeeping.getCheckin();
-        this.checkout=timeKeeping.getCheckout();
+        this.checkin=timeKeeping.getCheckin().getTime();
+        this.checkout=timeKeeping.getCheckout().getTime();
 
         SimpleDateFormat DateToString=new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat StringToDate=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

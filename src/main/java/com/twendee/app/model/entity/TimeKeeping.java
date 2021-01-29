@@ -19,7 +19,7 @@ public class TimeKeeping extends BaseEntity {
     @Column(name = "time_keeping_id")
     public Integer timeKeepingId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date date;
 
