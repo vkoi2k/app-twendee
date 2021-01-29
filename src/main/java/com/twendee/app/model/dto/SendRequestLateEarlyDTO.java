@@ -17,11 +17,4 @@ public class SendRequestLateEarlyDTO{
     private int timeLate;
     private int timeEarly;
     private String email;
-    public SendRequestLateEarlyDTO(){}
-    public SendRequestLateEarlyDTO(Request request){
-        this.reason = request.getReason();
-        this.date = request.getLateEarly().getDate();
-        this.timeEarly = request.getLateEarly().getTimeEarly();
-        this.timeLate = request.getLateEarly().getTimeLate();
-    }
 }

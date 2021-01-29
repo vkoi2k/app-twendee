@@ -19,13 +19,4 @@ public class SendRequestAbsenceOutsideDTO{
     private boolean type;
     private String email;
 
-    public SendRequestAbsenceOutsideDTO(){}
-
-    public SendRequestAbsenceOutsideDTO(Request request){
-        this.email = request.getUser().getEmail();
-        this.reason = request.getReason();
-        this.startDate = request.getAbsenceOutside().getStartDate();
-        this.endDate = request.getAbsenceOutside().getEndDate();
-        this.type = request.getAbsenceOutside().isType();
-    }
 }
