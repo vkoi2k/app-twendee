@@ -18,7 +18,8 @@ public interface StaffService {
 
     ResponseEntity<?> getDetail(Integer id);
 
-    List<UserDTO> search(String KeyWord);
+    List<UserDTO> search(String KeyWord, Integer page, Integer limit);
+
 
     ResponseEntity<?> updateStaff(InputUserDTO inputUserDTO, Integer id);
 

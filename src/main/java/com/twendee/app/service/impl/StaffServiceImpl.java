@@ -105,11 +105,19 @@ public class StaffServiceImpl implements StaffService {
         }
     }
 
-    //search for staff by name, email or phone, input is string
+    //search for staff by name
     @Override
-    public List<UserDTO> search(String KeyWord) {
-        List<User> users = userRepository.findByNameLikeOrEmailLikeOrPhoneLikeAndDeletedFalse(
-                "%" + KeyWord + "%", "%" + KeyWord + "%", "%" + KeyWord + "%");
+    public List<UserDTO> search(String KeyWord, Integer page, Integer limit) {
+        List<User> users;
+        if(page!=null && limit !=null){
+            Page<User> userPage=userRepository.
+                    findByDeletedFalseAndNameLike
+                            ("%" + KeyWord + "%", PageRequest.of(page, limit));
+            users= userPage.toList();
+        }else
+         users = userRepository.findByDeletedFalseAndNameLike(
+                "%" + KeyWord + "%");
+
         ModelMapper modelMapper = new ModelMapper();
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
