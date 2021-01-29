@@ -15,11 +15,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @SpringBootTest
 class AppApplicationTests {
@@ -61,17 +66,6 @@ class AppApplicationTests {
 
     @Test
     void linhTinh(){
-        List<User> users = userRepository.findByDeletedFalse(Sort.by("name"));
-
-//tạo resource + thêm link
-//        EntityModel<User> resource = EntityModel.of(user);
-//        resource.add(linkTo.withRel("all-users"));
-////lấy link (set thế này thì khi thay đổi uri của method thì link này cũng đổi theo)
-//        WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).tenMethod());    //class.method
-//import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-//import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
-
-
 
     }
 
