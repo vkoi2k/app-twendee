@@ -1,5 +1,6 @@
 package com.twendee.app.controller;
 
+import com.twendee.app.model.dto.RequestDTO;
 import com.twendee.app.model.entity.Request;
 import com.twendee.app.service.RequestService;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,9 @@ public class RequestController {
     }
 
     @GetMapping("/requests")
-    public List<Request> findAll(){
-        return requestService.findAll();
+    public List<RequestDTO> findAll(@RequestParam(value = "page", required = false) Integer page,
+                                    @RequestParam(value = "limit", required = false) Integer limit){
+        return requestService.findAll(page,limit);
     }
 
     @GetMapping("/requests/{id}")
