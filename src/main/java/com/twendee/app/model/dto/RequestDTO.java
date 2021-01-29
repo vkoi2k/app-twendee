@@ -1,5 +1,6 @@
 package com.twendee.app.model.dto;
 
+import com.twendee.app.model.entity.Request;
 import com.twendee.app.model.entity.User;
 import lombok.Data;
 import lombok.Getter;
@@ -7,7 +8,6 @@ import lombok.Setter;
 
 import java.util.Date;
 
-@Data
 @Getter
 @Setter
 public class RequestDTO {
@@ -16,5 +16,14 @@ public class RequestDTO {
     private String reason;
     private boolean isAccept;
     private String type;
-//    private User user;
+//    private String email;
+//
+//    public RequestDTO(){}
+//    public RequestDTO(Request request){
+//        this.requestId = request.getRequestId();
+//        this.timeRequest = request.getTimeRequest();
+//        this.reason = request.getReason();
+//        this.isAccept = request.isAccept();
+//        this.type = request.type;
+//    }
 }

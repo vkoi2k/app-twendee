@@ -1,0 +1,22 @@
+package com.twendee.app.model.dto;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.twendee.app.model.entity.Request;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Date;
+
+@Getter
+@Setter
+public class SendRequestCheckOutDTO {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private Date date;
+    private String email;
+    public SendRequestCheckOutDTO(){}
+    public SendRequestCheckOutDTO(Request request){
+        this.date = request.getCheckoutSupport().getDate();
+        this.email = request.getUser().getEmail();
+    }
+}

@@ -9,11 +9,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminController {
+public class RequestController {
 
     private RequestService requestService;
 
-    public AdminController(RequestService requestService){
+    public RequestController(RequestService requestService){
         this.requestService = requestService;
     }
 
