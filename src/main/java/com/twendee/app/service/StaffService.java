@@ -20,6 +20,7 @@ public interface StaffService {
 
     List<UserDTO> search(String KeyWord, Integer page, Integer limit);
 
+
     ResponseEntity<?> updateStaff(InputUserDTO inputUserDTO, Integer id);
 
 }

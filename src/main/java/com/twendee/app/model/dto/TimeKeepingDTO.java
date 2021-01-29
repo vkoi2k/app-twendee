@@ -2,10 +2,7 @@ package com.twendee.app.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.twendee.app.model.entity.TimeKeeping;
-import com.twendee.app.model.entity.User;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.text.ParseException;
@@ -15,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class TimeKeepingDTO {
-    private User user;
+    private String username;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date date;
@@ -30,8 +27,12 @@ public class TimeKeepingDTO {
     private int timeLate;
     //số phút về sớm
     private int timeEarly;
+
+    //ghi chú
+    private String note;
+
     public TimeKeepingDTO(TimeKeeping timeKeeping) throws ParseException {
-        this.user=timeKeeping.getUser();
+        this.username=timeKeeping.getUser().getName();
         this.date=timeKeeping.getDate();
         this.checkin=timeKeeping.getCheckin();
         this.checkout=timeKeeping.getCheckout();
@@ -51,5 +52,17 @@ public class TimeKeepingDTO {
         if(early>0){
             this.timeEarly=Math.round(early/60000);
         }else this.timeEarly=0;
+
+        if(timeKeeping.getRequest() !=null){
+            if(timeKeeping.getRequest().getLateEarly()!=null){
+                this.note="Xin đi muộn/về sớm";
+            }else if(timeKeeping.getRequest().getAbsenceOutside()!=null){
+                if(timeKeeping.getRequest().getAbsenceOutside().isType())
+                    this.note="Xin nghỉ";
+                else this.note="Xin đi outside";
+            }else if(timeKeeping.getRequest().getCheckoutSupport()!=null){
+                    this.note="Checkout bù";
+            }
+        }
     }
 }

@@ -1,11 +1,14 @@
 package com.twendee.app.service;
 
-import com.twendee.app.model.entity.Request;
-import com.twendee.app.model.entity.User;
+import com.twendee.app.model.dto.Message;
+import com.twendee.app.model.dto.SendRequestAbsenceOutsideDTO;
+import com.twendee.app.model.dto.SendRequestLateEarlyDTO;
 
 public interface SendRequestService {
 
-    void create(Request request);
+    Message AbsenceOutside(SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO);
+
+    Message lateEarly(SendRequestLateEarlyDTO sendRequestLateEarlyDTO);
 
 //    User findByEmail(String email);
 }

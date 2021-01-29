@@ -117,6 +117,7 @@ public class StaffServiceImpl implements StaffService {
         }else
          users = userRepository.findByDeletedFalseAndNameLike(
                 "%" + KeyWord + "%");
+
         ModelMapper modelMapper = new ModelMapper();
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {

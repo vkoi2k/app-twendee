@@ -50,6 +50,7 @@ public class StaffController {
 
     //search by name, email or phone, input is string
     @GetMapping(value = "/staffs", params = "search")
+
     public List<UserDTO> search(@RequestParam String search,
                                 @RequestParam(value = "page", required = false) Integer page,
                                 @RequestParam(value = "limit", required = false) Integer limit){

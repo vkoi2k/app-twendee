@@ -1,5 +1,6 @@
 package com.twendee.app.controller;
 
+import com.twendee.app.model.dto.Message;
 import com.twendee.app.model.dto.SendRequestAbsenceOutsideDTO;
 import com.twendee.app.model.dto.SendRequestLateEarlyDTO;
 import com.twendee.app.model.entity.Request;
@@ -20,32 +21,19 @@ public class SendRequestController {
     }
 
     @PostMapping("/day-off")
-    public ResponseEntity<HttpStatus> createRequestDayOff(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
-//        User user = sendRequestService.findByEmail(email);
-        SendRequestTransform transform = new SendRequestTransform();
-//        Request r = transform.dayOff(user,sendRequestDayOffDTO);
-        Request r = transform.dayOff(sendRequestAbsenceOutsideDTO);
-        sendRequestService.create(r);
-        return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
+    public Message createRequestDayOff(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
+        sendRequestAbsenceOutsideDTO.setType(true);
+        return sendRequestService.AbsenceOutside(sendRequestAbsenceOutsideDTO);
     }
 
     @PostMapping("/late-early")
-    public ResponseEntity<HttpStatus> createRequestLateEarly(@RequestBody SendRequestLateEarlyDTO sendRequestLateEarlyDTO){
-//        User user = sendRequestService.findByEmail(email);
-        SendRequestTransform transform = new SendRequestTransform();
-//        Request r = transform.dayOff(user,sendRequestDayOffDTO);
-        Request r = transform.lateEarly(sendRequestLateEarlyDTO);
-        sendRequestService.create(r);
-        return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
+    public Message createRequestLateEarly(@RequestBody SendRequestLateEarlyDTO sendRequestLateEarlyDTO){
+        return sendRequestService.lateEarly(sendRequestLateEarlyDTO);
     }
 
     @PostMapping("/out-side")
-    public ResponseEntity<HttpStatus> createRequestOutSide(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
-//        User user = sendRequestService.findByEmail(email);
-        SendRequestTransform transform = new SendRequestTransform();
-//        Request r = transform.dayOff(user,sendRequestDayOffDTO);
-        Request r = transform.outSide(sendRequestAbsenceOutsideDTO);
-        sendRequestService.create(r);
-        return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
+    public Message createRequestOutSide(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
+        sendRequestAbsenceOutsideDTO.setType(false);
+        return sendRequestService.AbsenceOutside(sendRequestAbsenceOutsideDTO);
     }
 }
