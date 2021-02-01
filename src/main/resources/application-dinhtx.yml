@@ -9,7 +9,7 @@ spring:
         format_sql: true
     show-sql: true
     jackson:
-      time-zone: Asia/Saigon
+     time-zone: Asia/Saigon
 logging:
   level:
     org:

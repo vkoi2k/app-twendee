@@ -55,4 +55,43 @@ public class RequestServiceImpl implements RequestService {
             return ResponseEntity.ok(new Message("Request not found."));
         }
     }
+
+    @Override
+    public List<RequestDTO> findByIsAcceptTrue( Integer page, Integer limit) {
+        List<Request> requests;
+        if (page != null && limit != null) {
+            Page<Request> pages = requestRepository.
+                    findByIsAcceptTrue(PageRequest.of(page, limit, Sort.by("requestId")));
+            requests = pages.toList();
+        } else {
+            requests = requestRepository.findByIsAcceptTrue(Sort.by("requestId"));
+        }
+        List<RequestDTO> requestDTOS=new ArrayList<>();
+        for(Request request: requests){
+            requestDTOS.add(new RequestDTO(request));
+        }
+        return requestDTOS;
+
+
+    }
+    @Override
+    public List<RequestDTO> findByIsAcceptFalse( Integer page, Integer limit) {
+        List<Request> requests;
+        if (page != null && limit != null) {
+            Page<Request> pages = requestRepository.
+                    findByIsAcceptFalse(PageRequest.of(page, limit, Sort.by("requestId")));
+            requests = pages.toList();
+        } else {
+            requests = requestRepository.findByIsAcceptFalse(Sort.by("requestId"));
+        }
+        List<RequestDTO> requestDTOS=new ArrayList<>();
+        for(Request request: requests){
+            requestDTOS.add(new RequestDTO(request));
+        }
+        return requestDTOS;
+
+
+    }
+
+
 }

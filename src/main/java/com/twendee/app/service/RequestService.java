@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface RequestService {
     List<RequestDTO> findAll(Integer page, Integer limit);
     ResponseEntity<?> findById(Integer id);
+
+    List<RequestDTO> findByIsAcceptTrue(Integer page, Integer limit);
+    List<RequestDTO> findByIsAcceptFalse(Integer page, Integer limit);
 }

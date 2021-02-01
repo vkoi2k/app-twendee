@@ -15,19 +15,31 @@ public class RequestController {
 
     private RequestService requestService;
 
-    public RequestController(RequestService requestService){
+    public RequestController(RequestService requestService) {
         this.requestService = requestService;
     }
 
     @GetMapping("/requests")
     public List<RequestDTO> findAll(@RequestParam(value = "page", required = false) Integer page,
-                                    @RequestParam(value = "limit", required = false) Integer limit){
-        return requestService.findAll(page,limit);
+                                    @RequestParam(value = "limit", required = false) Integer limit) {
+        return requestService.findAll(page, limit);
     }
 
     @GetMapping("/requests/{id}")
-    public ResponseEntity<?> getDetail(@PathVariable Integer id){
+    public ResponseEntity<?> getDetail(@PathVariable Integer id) {
         return requestService.findById(id);
+    }
+
+    @GetMapping(value = "/requests", params = "isAccept")
+    public List<RequestDTO> findByIsAccept(@RequestParam Boolean isAccept,
+                                           @RequestParam(value = "page", required = false) Integer page,
+                                           @RequestParam(value = "limit", required = false) Integer limit) {
+        if (isAccept == true) {
+            return requestService.findByIsAcceptTrue(page, limit);
+        } else {
+            return requestService.findByIsAcceptFalse(page, limit);
+
+        }
     }
 
 }
