@@ -1,9 +1,6 @@
 package com.twendee.app.controller;
 
-import com.twendee.app.model.dto.EmailInput;
-import com.twendee.app.model.dto.HistoryInput;
-import com.twendee.app.model.dto.Message;
-import com.twendee.app.model.dto.TimeKeepingDTO;
+import com.twendee.app.model.dto.*;
 import com.twendee.app.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +35,13 @@ public class UserController {
                                                            @RequestParam(value = "page", required = false) Integer start,
                                                            @RequestParam(value = "limit", required = false) Integer limit){
         return userService.userHistory(historyInput, start, limit);
+    }
+
+
+    @PostMapping("/user/{email}")
+    public ResponseEntity<?> updateProfile(@PathVariable String email,
+                                         @RequestBody InputProfileDTO inputProfileDTO){
+        return userService.updateProfile(inputProfileDTO, email);
     }
 
 
