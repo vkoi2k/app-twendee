@@ -10,6 +10,21 @@ spring:
     show-sql: true
     jackson:
       time-zone: Asia/Saigon
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: twendee3@gmail.com
+    password: Vkoitl2k
+    port: 587
+    protocol: smtp
+    test-connection: false
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 logging:
   level:
     org:
