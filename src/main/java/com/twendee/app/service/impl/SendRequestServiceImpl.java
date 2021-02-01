@@ -31,10 +31,9 @@ public class SendRequestServiceImpl implements SendRequestService {
     public Message absenceOutside(SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO) {
         try {
             User user = userRepository.getUserByEmailAndDeletedFalse(sendRequestAbsenceOutsideDTO.getEmail());
-            Date date = new Date();
             ModelMapper modelMapper = new ModelMapper();
             Request request = modelMapper.map(sendRequestAbsenceOutsideDTO,Request.class);
-            request.setTimeRequest(date);
+            request.setTimeRequest(new Date());
             request.setUser(user);
             sendRequestRepository.save(request);
             return new Message("Send request successfully, requestId: "+request.getRequestId());
@@ -48,13 +47,12 @@ public class SendRequestServiceImpl implements SendRequestService {
     public Message lateEarly(SendRequestLateEarlyDTO sendRequestLateEarlyDTO) {
         try {
             User user = userRepository.getUserByEmailAndDeletedFalse(sendRequestLateEarlyDTO.getEmail());
-            Date date = new Date();
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             LateEarly lateEarly = modelMapper.map(sendRequestLateEarlyDTO, LateEarly.class);
             Request request = modelMapper.map(sendRequestLateEarlyDTO, Request.class);
             request.setLateEarly(lateEarly);
-            request.setTimeRequest(date);
+            request.setTimeRequest(new Date());
             request.setUser(user);
             sendRequestRepository.save(request);
             return new Message("Send request successfully, requestId: "+request.getRequestId());
@@ -68,13 +66,12 @@ public class SendRequestServiceImpl implements SendRequestService {
     public Message checkOutSupport(SendRequestCheckOutDTO sendRequestCheckOutDTO) {
         try {
             User user = userRepository.getUserByEmailAndDeletedFalse(sendRequestCheckOutDTO.getEmail());
-            Date date = new Date();
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             CheckoutSupport checkoutSupport = modelMapper.map(sendRequestCheckOutDTO, CheckoutSupport.class);
             Request request = modelMapper.map(sendRequestCheckOutDTO, Request.class);
             request.setCheckoutSupport(checkoutSupport);
-            request.setTimeRequest(date);
+            request.setTimeRequest(new Date());
             request.setUser(user);
             sendRequestRepository.save(request);
             return new Message("Send request successfully, requestId: "+request.getRequestId());
