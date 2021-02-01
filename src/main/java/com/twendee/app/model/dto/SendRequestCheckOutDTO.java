@@ -10,11 +10,8 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class SendRequestLateEarlyDTO{
-    private String reason;
+public class SendRequestCheckOutDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date date;
-    private int timeLate;
-    private int timeEarly;
     private String email;
 }

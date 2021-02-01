@@ -1,13 +1,13 @@
 package com.twendee.app.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.twendee.app.model.entity.Request;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 
-@Data
 @Getter
 @Setter
 public class SendRequestAbsenceOutsideDTO{
@@ -17,5 +17,6 @@ public class SendRequestAbsenceOutsideDTO{
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date endDate;
     private boolean type;
-//    private User user;
+    private String email;
+
 }

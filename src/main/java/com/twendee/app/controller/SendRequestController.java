@@ -2,6 +2,7 @@ package com.twendee.app.controller;
 
 import com.twendee.app.model.dto.Message;
 import com.twendee.app.model.dto.SendRequestAbsenceOutsideDTO;
+import com.twendee.app.model.dto.SendRequestCheckOutDTO;
 import com.twendee.app.model.dto.SendRequestLateEarlyDTO;
 import com.twendee.app.model.entity.Request;
 import com.twendee.app.service.SendRequestService;
@@ -23,7 +24,7 @@ public class SendRequestController {
     @PostMapping("/day-off")
     public Message createRequestDayOff(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
         sendRequestAbsenceOutsideDTO.setType(true);
-        return sendRequestService.AbsenceOutside(sendRequestAbsenceOutsideDTO);
+        return sendRequestService.absenceOutside(sendRequestAbsenceOutsideDTO);
     }
 
     @PostMapping("/late-early")
@@ -34,6 +35,11 @@ public class SendRequestController {
     @PostMapping("/out-side")
     public Message createRequestOutSide(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
         sendRequestAbsenceOutsideDTO.setType(false);
-        return sendRequestService.AbsenceOutside(sendRequestAbsenceOutsideDTO);
+        return sendRequestService.absenceOutside(sendRequestAbsenceOutsideDTO);
+    }
+
+    @PostMapping("/check-out")
+    public Message createRequestCheckOut(@RequestBody SendRequestCheckOutDTO sendRequestCheckOutDTO){
+        return sendRequestService.checkOutSupport(sendRequestCheckOutDTO);
     }
 }

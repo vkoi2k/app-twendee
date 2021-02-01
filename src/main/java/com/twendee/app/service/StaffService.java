@@ -14,11 +14,12 @@ public interface StaffService {
 
     Message delete(Integer id);
 
-    Message addStaff(InputUserDTO inputUserDTO);
+    ResponseEntity<?> addStaff(InputUserDTO inputUserDTO);
 
     ResponseEntity<?> getDetail(Integer id);
 
-    List<UserDTO> search(String KeyWord);
+    List<UserDTO> search(String KeyWord, Integer page, Integer limit);
+
 
     ResponseEntity<?> updateStaff(InputUserDTO inputUserDTO, Integer id);
 
