@@ -1,11 +1,15 @@
 package com.twendee.app.controller;
 
+
+import com.twendee.app.model.dto.*;
+
 import com.twendee.app.model.dto.EmailInput;
 import com.twendee.app.model.dto.HistoryInput;
 import com.twendee.app.model.dto.Message;
 import com.twendee.app.model.dto.TimeKeepingDTO;
 import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.UserRepository;
+
 import com.twendee.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -63,6 +67,13 @@ public class UserController {
         maps.put("sl",60);
         return maps;
     }
+
+    @PostMapping("/user/{email}")
+    public ResponseEntity<?> updateProfile(@PathVariable String email,
+                                         @RequestBody InputProfileDTO inputProfileDTO){
+        return userService.updateProfile(inputProfileDTO, email);
+    }
+
 
 
 }
