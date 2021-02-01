@@ -1,13 +1,13 @@
 package com.twendee.app.service.impl;
 
-import com.twendee.app.model.dto.HistoryInput;
-import com.twendee.app.model.dto.Message;
-import com.twendee.app.model.dto.TimeKeepingDTO;
+import com.twendee.app.model.dto.*;
 import com.twendee.app.model.entity.TimeKeeping;
 import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.UserService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -142,4 +142,30 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.ok(new Message("get history failed"));
         }
     }
+
+    @Override
+    public ResponseEntity<?> updateProfile(InputProfileDTO inputProfileDTO, String email) {
+
+            try{
+                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+                ModelMapper modelMapper = new ModelMapper();
+                modelMapper.getConfiguration()
+                        .setMatchingStrategy(MatchingStrategies.STRICT);
+                User oldUser = userRepository.getUserByEmailAndDeletedFalse(email);
+                User user = modelMapper.map(inputProfileDTO, User.class);
+                user.setUserId(oldUser.getUserId());
+                user.setRole(oldUser.isRole());
+                user.setPass(oldUser.getPass());
+                user.setEmail(oldUser.getEmail());
+                user.setDob(sdf.parse(inputProfileDTO.getBirthday()));
+                return ResponseEntity.ok(modelMapper.map(userRepository.save(user),UserDTO.class));
+
+            }catch (Exception e){
+                e.printStackTrace();
+                return ResponseEntity.ok(new Message("update failed"));
+            }
+        }
+
+
+
 }
