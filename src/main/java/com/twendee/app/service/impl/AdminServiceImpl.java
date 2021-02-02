@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -251,9 +252,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<TimeKeepingDTO> getListTimekeepingByDate(Integer page, Integer limit, Integer dateint) {
+    public List<TimeKeepingDTO> getListTimekeepingByDate(Integer page, Integer limit, Integer dateInt) {
         try {
-            Date date = new Date(dateint);
+            Date date = new Date(dateInt);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             List<TimeKeeping> timeKeepingList;
             if (page != null && limit != null) {
@@ -267,12 +268,35 @@ public class AdminServiceImpl implements AdminService {
                         (simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
                                 simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59"));
             }
-            List<TimeKeepingDTO> timeKeepingDTOList;
+            List<TimeKeepingDTO> timeKeepingDTOList=new ArrayList<>();
             for (TimeKeeping timeKeeping: timeKeepingList){
                 timeKeepingDTOList.add(new TimeKeepingDTO(timeKeeping));
             }
+            return timeKeepingDTOList;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<TimeKeepingDTO> getListTimekeepingByMonth(Integer page, Integer limit, Integer month, Integer year) {
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            List<TimeKeeping> timeKeepingList;
+            if (page != null && limit != null) {
+
+            }else{
+
+            }
+            List<TimeKeepingDTO> timeKeepingDTOList=new ArrayList<>();
+            for (TimeKeeping timeKeeping: timeKeepingList){
+                timeKeepingDTOList.add(new TimeKeepingDTO(timeKeeping));
+            }
+            return timeKeepingDTOList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
