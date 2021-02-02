@@ -59,27 +59,13 @@ public class UserController {
         return userService.userHistory(historyInput, start, limit);
     }
 
-    @GetMapping("/testnha")
-    public Map<String, Object> testnha(){
-        List<String> list=new ArrayList<>();
-        list.add("mot");
-        list.add("mot");
-        list.add("mot");
-        list.add("mot");
-        list.add("mot");
-        Map<String, Object> maps=new HashMap<>();
-        maps.put("list",list);
-        maps.put("sl",60);
-        return maps;
-    }
-
-    @PostMapping("/user/updateProfile")
+    @PostMapping("/user")
     public ResponseEntity<?> updateProfile(@RequestParam String email,
                                          @RequestBody InputProfileDTO inputProfileDTO){
         return userService.updateProfile(inputProfileDTO, email);
     }
 
-    @GetMapping("user/profile")
+    @GetMapping("user")
     public User profile(@RequestParam String token){
         return  jwtTokenProvider.getUserFromToken(token);
 
