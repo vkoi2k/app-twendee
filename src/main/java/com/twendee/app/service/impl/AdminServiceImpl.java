@@ -250,7 +250,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<TimeKeepingDTO> getListTimekeepingByDate(Integer page, Integer limit, Integer dateInt) {
+    public List<TimeKeepingDTO> getListTimekeepingByDate(Integer page, Integer limit, long dateInt) {
         try {
             Date date = new Date(dateInt);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -290,17 +290,21 @@ public class AdminServiceImpl implements AdminService {
             cal.add(Calendar.MONTH, 1);
             System.out.println("cal: " + DateToString.format(cal.getTime()) + " 00:00:00");
             List<TimeKeeping> timeKeepingList;
-
             if (page != null && limit != null) {
                 Page<TimeKeeping> pages = timeKeepingRepository
-                        .findByUserAndDateGreaterThanEqualAndDateLessThan(
+                        .findByDateGreaterThanEqualAndDateLessThan(
                                 StringToDate.parse(DateToString.format(date) + " 00:00:00"),
                                 StringToDate.parse(DateToString.format(cal.getTime()) + " 00:00:00"),
-                                PageRequest.of(page, limit, Sort.by("name").ascending())
+                                PageRequest.of(page, limit, Sort.by("user.name").ascending())
                         );
                 timeKeepingList = pages.toList();
             }else{
-
+                timeKeepingList = timeKeepingRepository
+                        .findByDateGreaterThanEqualAndDateLessThan(
+                                StringToDate.parse(DateToString.format(date) + " 00:00:00"),
+                                StringToDate.parse(DateToString.format(cal.getTime()) + " 00:00:00"),
+                                Sort.by("user.name").ascending()
+                        );
             }
             List<TimeKeepingDTO> timeKeepingDTOList=new ArrayList<>();
             for (TimeKeeping timeKeeping: timeKeepingList){
