@@ -1,30 +1,20 @@
 package com.twendee.app;
 
-import com.twendee.app.model.dto.UserDTO;
+import com.twendee.app.component.MailSender;
 import com.twendee.app.model.entity.TimeKeeping;
 import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.StaffService;
-import com.twendee.app.service.UserService;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @SpringBootTest
 class AppApplicationTests {
@@ -33,6 +23,9 @@ class AppApplicationTests {
 
     @Autowired
     TimeKeepingRepository timeKeepingRepository;
+
+    @Autowired
+    MailSender mailSender;
 
     @Autowired
     StaffService staffService;
@@ -66,7 +59,33 @@ class AppApplicationTests {
 
     @Test
     void linhTinh(){
-
+        mailSender.send("sieunhanbay1997@gmail.com", "ahihi", "hello mail sender");
     }
 
+    @Test
+    void testList(){
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date endDate = simpleDateFormat.parse("25/02/2021");
+            Date date;
+            for (date = removeTime(new Date(new Date().getTime()+86_400_000)); date.before(removeTime(endDate)) || date.equals(removeTime(endDate));
+                 date.setTime(date.getTime() + 86_400_000)) {
+                System.out.println(simpleDateFormat.format(date));
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public Date removeTime(Date date){
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd/MM/yyyy");
+        String stringDate=simpleDateFormat.format(date);
+        Date date1 = null;
+        try {
+            date1 = simpleDateFormat.parse(stringDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date1;
+    }
 }

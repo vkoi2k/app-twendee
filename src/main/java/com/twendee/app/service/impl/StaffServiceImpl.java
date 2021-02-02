@@ -92,11 +92,11 @@ public class StaffServiceImpl implements StaffService {
             newUserDTO.setBirthday(user.getDob().getTime());
             return ResponseEntity.ok(newUserDTO);
         }catch (DataIntegrityViolationException ex){
-            return ResponseEntity.badRequest().body(new Message("DUPLICATE_EMAIL"));
+            return ResponseEntity.ok(new Message("DUPLICATE_EMAIL"));
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error(e.toString());
-            return ResponseEntity.badRequest().body(new Message("ADD_USER_FAILED"));
+            return ResponseEntity.ok(new Message("ADD_USER_FAILED"));
         }
     }
 
@@ -152,6 +152,9 @@ public class StaffServiceImpl implements StaffService {
             user.setRole(oldUser.isRole());
             user.setPass(oldUser.getPass());
             user.setDob(new Date(inputUserDTO.getBirthday()));
+            if(!inputUserDTO.getEmail().equals(oldUser.getEmail())){
+                return ResponseEntity.ok(new Message("You may not change your email"));
+            }
             user.setEmail(oldUser.getEmail());
             UserDTO updatedUserDTO=modelMapper.map(userRepository.save(user),UserDTO.class);
             updatedUserDTO.setBirthday(user.getDob().getTime());

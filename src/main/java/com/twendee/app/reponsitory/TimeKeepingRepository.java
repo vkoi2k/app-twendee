@@ -27,4 +27,7 @@ public interface TimeKeepingRepository extends JpaRepository<TimeKeeping, Intege
     Page<TimeKeeping> findByUserAndDateGreaterThanEqualAndDateLessThan(
             User user, Date minDate, Date maxDate, Pageable pageable
     );
+
+    List<TimeKeeping> findByUserAndDateGreaterThanEqualAndDateLessThanEqual
+            (User user, Date minDate, Date maxDate);
 }
