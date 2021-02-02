@@ -66,7 +66,7 @@ public class UserController {
     }
 
     @GetMapping("user")
-    public User profile(@RequestParam String token){
+    public User profile(@RequestBody String token){
         return  jwtTokenProvider.getUserFromToken(token);
 
 
