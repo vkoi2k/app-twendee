@@ -1,5 +1,6 @@
 package com.twendee.app.service.impl;
 
+import com.twendee.app.component.MailSender;
 import com.twendee.app.model.dto.*;
 import com.twendee.app.model.entity.Request;
 import com.twendee.app.model.entity.TimeKeeping;
@@ -7,6 +8,7 @@ import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.UserService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +36,15 @@ public class UserServiceImpl implements UserService {
     final
     PasswordEncoder passwordEncoder;
 
+    final
+    MailSender mailSender;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository,PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository,PasswordEncoder passwordEncoder,MailSender mailSender) {
         this.userRepository = userRepository;
         this.timeKeepingRepository = timeKeepingRepository;
         this.passwordEncoder = passwordEncoder;
+        this.mailSender = mailSender;
     }
 
     @Override
@@ -158,6 +164,8 @@ public class UserServiceImpl implements UserService {
         String newPass = RandomStringUtils.randomAlphanumeric(6);
         user.get().setPass(passwordEncoder.encode(newPass));
         userRepository.save(user.get());
+        mailSender.send(user.get().getEmail(),
+                "Mật khẩu mới là: ");
     }
 
     @Override
