@@ -22,7 +22,7 @@ public class RequestServiceImpl implements RequestService {
     private UserRepository userRepository;
     private RequestRepository requestRepository;
 
-    public RequestServiceImpl(RequestRepository requestRepository,UserRepository userRepository){
+    public RequestServiceImpl(RequestRepository requestRepository, UserRepository userRepository) {
         this.userRepository = userRepository;
         this.requestRepository = requestRepository;
     }
@@ -37,8 +37,8 @@ public class RequestServiceImpl implements RequestService {
         } else {
             requests = requestRepository.findAll(Sort.by("requestId"));
         }
-        List<RequestDTO> requestDTOS=new ArrayList<>();
-        for(Request request: requests){
+        List<RequestDTO> requestDTOS = new ArrayList<>();
+        for (Request request : requests) {
             requestDTOS.add(new RequestDTO(request));
         }
         return requestDTOS;
@@ -50,14 +50,14 @@ public class RequestServiceImpl implements RequestService {
             Optional<Request> request = requestRepository.findById(id);
             RequestDTO requestDTO = new RequestDTO(request.get());
             return ResponseEntity.ok(requestDTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.ok(new Message("Request not found."));
         }
     }
 
     @Override
-    public List<RequestDTO> findByIsAcceptTrue( Integer page, Integer limit) {
+    public List<RequestDTO> findByIsAcceptTrue(Integer page, Integer limit) {
         List<Request> requests;
         if (page != null && limit != null) {
             Page<Request> pages = requestRepository.
@@ -66,16 +66,17 @@ public class RequestServiceImpl implements RequestService {
         } else {
             requests = requestRepository.findByIsAcceptTrue(Sort.by("requestId"));
         }
-        List<RequestDTO> requestDTOS=new ArrayList<>();
-        for(Request request: requests){
+        List<RequestDTO> requestDTOS = new ArrayList<>();
+        for (Request request : requests) {
             requestDTOS.add(new RequestDTO(request));
         }
         return requestDTOS;
 
 
     }
+
     @Override
-    public List<RequestDTO> findByIsAcceptFalse( Integer page, Integer limit) {
+    public List<RequestDTO> findByIsAcceptFalse(Integer page, Integer limit) {
         List<Request> requests;
         if (page != null && limit != null) {
             Page<Request> pages = requestRepository.
@@ -84,13 +85,63 @@ public class RequestServiceImpl implements RequestService {
         } else {
             requests = requestRepository.findByIsAcceptFalse(Sort.by("requestId"));
         }
-        List<RequestDTO> requestDTOS=new ArrayList<>();
-        for(Request request: requests){
+
+        List<RequestDTO> requestDTOS = new ArrayList<>();
+        for (Request request : requests) {
             requestDTOS.add(new RequestDTO(request));
         }
         return requestDTOS;
 
 
+    }
+
+    @Override
+    public List<RequestDTO> findByType(String type, Integer page, Integer limit) {
+        List<Request> requests = null;
+        Page<Request> pages ;
+
+        if (page != null && limit != null) {
+            if (type == "Đi muộn - Về sớm") {
+                pages = requestRepository.
+                        findByLateEarlyIsNotNull(PageRequest.of(page, limit, Sort.by("requestId")));
+                requests = pages.toList();
+
+            }
+            else if (type == "Xin nghỉ - Out side") {
+                 pages = requestRepository.
+                        findByAbsenceOutsideIsNotNull(PageRequest.of(page, limit, Sort.by("requestId")));
+                requests = pages.toList();
+
+            }
+            else if (type == "Quên check out") {
+                 pages = requestRepository.
+                        findByCheckoutSupportIsNotNull(PageRequest.of(page, limit, Sort.by("requestId")));
+                requests = pages.toList();
+
+            }
+
+        } else {
+
+            if (type == "Đi muộn - Về sớm") {
+                requests = requestRepository.findByLateEarlyIsNotNull(Sort.by("requestId"));
+
+            }
+            else if (type == "Xin nghỉ - Out side") {
+                requests = requestRepository.findByAbsenceOutsideIsNotNull(Sort.by("requestId"));
+
+            }
+            else if (type == "Quên check out") {
+                requests = requestRepository.findByCheckoutSupportIsNotNull(Sort.by("requestId"));
+
+            }
+
+        }
+
+        List<RequestDTO> requestDTOS = new ArrayList<>();
+        for (Request request: requests) {
+            requestDTOS.add(new RequestDTO(request));
+        }
+        return requestDTOS;
     }
 
 

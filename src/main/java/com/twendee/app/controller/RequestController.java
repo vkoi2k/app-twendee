@@ -42,4 +42,14 @@ public class RequestController {
         }
     }
 
+    @GetMapping(value = "/requests1", params = "type")
+    public List<RequestDTO> findByType(@RequestParam String type,
+                                           @RequestParam(value = "page", required = false) Integer page,
+                                           @RequestParam(value = "limit", required = false) Integer limit) {
+        return  requestService.findByType(type,page,limit);
+
+    }
+
+
+
 }

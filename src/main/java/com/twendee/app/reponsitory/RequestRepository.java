@@ -18,6 +18,19 @@ public interface RequestRepository extends JpaRepository<Request, Integer> {
     Page<Request> findByIsAcceptFalse(Pageable pageable);
     List<Request> findByIsAcceptFalse(Sort sort);
 
+    Page<Request> findByLateEarlyIsNotNull(Pageable pageable);
+    List<Request> findByLateEarlyIsNotNull(Sort sort);
+
+    Page<Request> findByCheckoutSupportIsNotNull(Pageable pageable);
+    List<Request> findByCheckoutSupportIsNotNull(Sort sort);
+
+    Page<Request> findByAbsenceOutsideIsNotNull(Pageable pageable);
+    List<Request> findByAbsenceOutsideIsNotNull(Sort sort);
+
+
+
+
+
 
 
 }
