@@ -1,6 +1,7 @@
 package com.twendee.app.controller;
 
 
+import com.twendee.app.config.JwtTokenProvider;
 import com.twendee.app.model.dto.*;
 
 import com.twendee.app.model.dto.EmailInput;
@@ -28,9 +29,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class UserController {
     final
     UserService userService;
+    final
+    JwtTokenProvider jwtTokenProvider;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider) {
+
         this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
 
@@ -72,6 +77,13 @@ public class UserController {
     public ResponseEntity<?> updateProfile(@PathVariable String email,
                                          @RequestBody InputProfileDTO inputProfileDTO){
         return userService.updateProfile(inputProfileDTO, email);
+    }
+
+    @GetMapping("user/{token}")
+    public User profile(@PathVariable String token){
+        return  jwtTokenProvider.getUserFromToken(token);
+
+
     }
 
 
