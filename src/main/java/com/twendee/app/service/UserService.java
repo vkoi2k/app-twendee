@@ -17,7 +17,7 @@ public interface UserService {
 //
     ResponseEntity<?> updateProfile(InputProfileDTO inputProfileDTO, String email);
 
-    ResponseEntity<?> profile(String token);
+    ResponseEntity<?> profile(InputToken inputToken);
 
 
 

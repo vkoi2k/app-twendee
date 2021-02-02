@@ -172,8 +172,8 @@ public class UserServiceImpl implements UserService {
         }
 
     @Override
-    public ResponseEntity<?> profile(String token) {
-
+    public ResponseEntity<?> profile(InputToken inputToken) {
+        String token = inputToken.getToken();
         try {
             User user = jwtTokenProvider.getUserFromToken(token);
             ModelMapper modelMapper = new ModelMapper();
