@@ -165,7 +165,10 @@ public class UserServiceImpl implements UserService {
         user.get().setPass(passwordEncoder.encode(newPass));
         userRepository.save(user.get());
         mailSender.send(user.get().getEmail(),
-                "Mật khẩu mới là: ");
+                    "Quên password: ",
+                    "Mật khẩu mới là: " + newPass
+        );
+
     }
 
     @Override

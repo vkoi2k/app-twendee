@@ -79,11 +79,12 @@ public class UserController {
         return userService.updateProfile(inputProfileDTO, email);
     }
 
-    @GetMapping("user/profile")
-    public User profile(@RequestParam String token){
-        return  jwtTokenProvider.getUserFromToken(token);
 
 
+    @GetMapping("forgotPassword")
+    public ResponseEntity<?> forgotPassword(@RequestParam Integer id){
+
+        return userService.forgotPassword(id);
     }
 
 
