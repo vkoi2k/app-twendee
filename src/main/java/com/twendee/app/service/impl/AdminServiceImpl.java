@@ -9,14 +9,12 @@ import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.service.AdminService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -282,10 +280,25 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<TimeKeepingDTO> getListTimekeepingByMonth(Integer page, Integer limit, Integer month, Integer year) {
         try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat DateToString = new SimpleDateFormat("01/MM/yyyy");
+            SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.MONTH, month - 1);
+            cal.set(Calendar.YEAR, year);
+            System.out.println("cal chua cong: " + DateToString.format(cal.getTime()) + " 00:00:00");
+            Date date = cal.getTime();
+            cal.add(Calendar.MONTH, 1);
+            System.out.println("cal: " + DateToString.format(cal.getTime()) + " 00:00:00");
             List<TimeKeeping> timeKeepingList;
-            if (page != null && limit != null) {
 
+            if (page != null && limit != null) {
+                Page<TimeKeeping> pages = timeKeepingRepository
+                        .findByUserAndDateGreaterThanEqualAndDateLessThan(
+                                StringToDate.parse(DateToString.format(date) + " 00:00:00"),
+                                StringToDate.parse(DateToString.format(cal.getTime()) + " 00:00:00"),
+                                PageRequest.of(page, limit, Sort.by("name").ascending())
+                        );
+                timeKeepingList = pages.toList();
             }else{
 
             }
