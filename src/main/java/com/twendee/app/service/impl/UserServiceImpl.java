@@ -1,5 +1,6 @@
 package com.twendee.app.service.impl;
 
+import com.twendee.app.config.JwtTokenProvider;
 import com.twendee.app.model.dto.*;
 import com.twendee.app.model.entity.TimeKeeping;
 import com.twendee.app.model.entity.User;
@@ -29,10 +30,14 @@ public class UserServiceImpl implements UserService {
     final
     TimeKeepingRepository timeKeepingRepository;
 
+    final
+    JwtTokenProvider jwtTokenProvider;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository) {
+    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.timeKeepingRepository = timeKeepingRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -166,6 +171,21 @@ public class UserServiceImpl implements UserService {
             }
         }
 
+    @Override
+    public ResponseEntity<?> profile(String token) {
+
+        try {
+            User user = jwtTokenProvider.getUserFromToken(token);
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration()
+                    .setMatchingStrategy(MatchingStrategies.STRICT);
+            UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+            userDTO.setBirthday(user.getDob().getTime());
+            return ResponseEntity.ok(userDTO);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new Message("user not found."));
+        }
+    }
 
 
 }

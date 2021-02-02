@@ -59,15 +59,16 @@ public class UserController {
         return userService.userHistory(historyInput, start, limit);
     }
 
-    @PostMapping("/user")
+    @PostMapping("/user/update")
     public ResponseEntity<?> updateProfile(@RequestParam String email,
                                          @RequestBody InputProfileDTO inputProfileDTO){
         return userService.updateProfile(inputProfileDTO, email);
     }
 
-    @GetMapping("/user")
-    public User profile(@RequestBody String token){
-        return  jwtTokenProvider.getUserFromToken(token);
+    @PostMapping("/user")
+    public ResponseEntity<?> profile(@RequestBody String token){
+
+        return userService.profile(token);
 
 
     }
