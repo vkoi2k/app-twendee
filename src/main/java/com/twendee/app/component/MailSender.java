@@ -10,25 +10,36 @@ import javax.mail.internet.MimeMessage;
 
 @Service
 public class MailSender {
-//    final
-//    JavaMailSender javaMailSender;
-//
-//    public MailSender(JavaMailSender javaMailSender) {
-//        this.javaMailSender = javaMailSender;
-//    }
-//
-//    public void send(String from, String to, String cc, String bcc,
-//                     String subject, String body, String attachment){
-//    try {
-//        //create mail
-//        MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
-//        //user class helper
-//        MimeMessageHelper mimeMessageHelper=
-//                new MimeMessageHelper(mimeMailMessage, true);
-//    }catch (Exception e){
-//        e.printStackTrace();
-//    }
-//
-//
-//    }
+    final
+    JavaMailSender javaMailSender;
+
+    public MailSender(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
+
+    public void send(String to, String cc, String bcc,
+                     String subject, String body, String attachment){
+    try {
+        String from="echsut102017@gmail.com";
+
+        //create mail
+        MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
+        //user class helper
+        MimeMessageHelper mimeMessageHelper=
+                new MimeMessageHelper(mimeMailMessage, true);
+        mimeMessageHelper.setFrom(from, from);
+        mimeMessageHelper.setTo(to);
+        mimeMessageHelper.setReplyTo(from, from);
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(body,true);
+
+        javaMailSender.send(mimeMailMessage);
+    }catch (Exception e){
+        e.printStackTrace();
+    }
+    }
+
+    public void send(String to, String subject, String body){
+        this.send(to, "", "", subject, body, "");
+    }
 }
