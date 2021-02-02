@@ -1,11 +1,14 @@
 package com.twendee.app.service.impl;
 
 import com.twendee.app.component.MailSender;
+import com.twendee.app.model.dto.TimeKeepingDTO;
 import com.twendee.app.model.entity.Request;
 import com.twendee.app.model.entity.TimeKeeping;
 import com.twendee.app.reponsitory.RequestRepository;
 import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.service.AdminService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -240,7 +243,34 @@ public class AdminServiceImpl implements AdminService {
                                     simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
                                     simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59")).get(0);
             timeKeeping.setCheckout(simpleDateFormat.parse(simpleDateFormat.format(date) + " 18:00:00"));
+            timeKeeping.setRequest(request);
             timeKeepingRepository.save(timeKeeping);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<TimeKeepingDTO> getListTimekeepingByDate(Integer page, Integer limit, Integer dateint) {
+        try {
+            Date date = new Date(dateint);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            List<TimeKeeping> timeKeepingList;
+            if (page != null && limit != null) {
+                Page<TimeKeeping> timeKeepingPage = timeKeepingRepository.findByDateGreaterThanEqualAndDateLessThanEqual
+                        (simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
+                                simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59"),
+                                PageRequest.of(page, limit));
+                timeKeepingList=timeKeepingPage.toList();
+            }else{
+                timeKeepingList=timeKeepingRepository.findByDateGreaterThanEqualAndDateLessThanEqual
+                        (simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
+                                simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59"));
+            }
+            List<TimeKeepingDTO> timeKeepingDTOList;
+            for (TimeKeeping timeKeeping: timeKeepingList){
+                timeKeepingDTOList.add(new TimeKeepingDTO(timeKeeping));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
