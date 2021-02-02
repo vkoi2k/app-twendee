@@ -73,14 +73,14 @@ public class UserController {
         return maps;
     }
 
-    @PostMapping("/user/{email}")
-    public ResponseEntity<?> updateProfile(@PathVariable String email,
+    @PostMapping("/user/updateProfile")
+    public ResponseEntity<?> updateProfile(@RequestParam String email,
                                          @RequestBody InputProfileDTO inputProfileDTO){
         return userService.updateProfile(inputProfileDTO, email);
     }
 
-    @GetMapping("user/{token}")
-    public User profile(@PathVariable String token){
+    @GetMapping("user/profile")
+    public User profile(@RequestParam String token){
         return  jwtTokenProvider.getUserFromToken(token);
 
 
