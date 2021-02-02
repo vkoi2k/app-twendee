@@ -5,6 +5,7 @@ import com.twendee.app.config.JwtTokenProvider;
 import com.twendee.app.model.dto.JwtAuthenticationResponse;
 import com.twendee.app.model.dto.LoginRequest;
 import com.twendee.app.model.entity.CustomUserDetail;
+import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +52,11 @@ public class AuthController {
 		String jwt = jwtTokenProvider.generateToken((CustomUserDetail) authentication.getPrincipal());
 		System.out.println("Auth"+authentication);
 		Collection<? extends GrantedAuthority> role = authentication.getAuthorities();
+		User user = jwtTokenProvider.getUserFromToken(jwt);
 		List<String> roles = new ArrayList<>();
 		for(GrantedAuthority grantedAuthority : role) {
 			roles.add(grantedAuthority.getAuthority());
 		}
-		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, roles));
+		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, roles,user));
 	}
 }
