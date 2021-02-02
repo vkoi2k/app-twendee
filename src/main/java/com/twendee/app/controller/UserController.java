@@ -35,12 +35,12 @@ public class UserController {
 
 
     @PostMapping("/checkin")
-    public Message checkIn(@RequestBody EmailInput email){
+    public Message checkIn(@RequestBody EmailInput email) {
         return userService.userCheckin(email.getEmail());
     }
 
     @PostMapping("/checkout")
-    public Message checkOut(@RequestBody EmailInput email){
+    public Message checkOut(@RequestBody EmailInput email) {
         return userService.userCheckout(email.getEmail());
     }
 
@@ -49,31 +49,37 @@ public class UserController {
     //start là số page (trang) bắt đầu từ 0
     @PostMapping("/history")
     public ResponseEntity<?> getHistory(@RequestBody HistoryInput historyInput,
-                                                           @RequestParam(value = "page", required = false) Integer start,
-                                                           @RequestParam(value = "limit", required = false) Integer limit){
+                                        @RequestParam(value = "page", required = false) Integer start,
+                                        @RequestParam(value = "limit", required = false) Integer limit) {
         return userService.userHistory(historyInput, start, limit);
     }
 
     @GetMapping("/testnha")
-    public Map<String, Object> testnha(){
-        List<String> list=new ArrayList<>();
+    public Map<String, Object> testnha() {
+        List<String> list = new ArrayList<>();
         list.add("mot");
         list.add("mot");
         list.add("mot");
         list.add("mot");
         list.add("mot");
-        Map<String, Object> maps=new HashMap<>();
-        maps.put("list",list);
-        maps.put("sl",60);
+        Map<String, Object> maps = new HashMap<>();
+        maps.put("list", list);
+        maps.put("sl", 60);
         return maps;
     }
 
     @PostMapping("/user/{email}")
     public ResponseEntity<?> updateProfile(@PathVariable String email,
-                                         @RequestBody InputProfileDTO inputProfileDTO){
+                                           @RequestBody InputProfileDTO inputProfileDTO) {
         return userService.updateProfile(inputProfileDTO, email);
     }
 
+    @GetMapping("forgotPassword")
+    public void forgotPassword(@RequestParam(name = "id") Integer userId) throws Exception {
+
+                userService.forgotPassword(userId);
+
+    }
 
 
 }

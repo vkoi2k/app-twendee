@@ -1,10 +1,11 @@
 package com.twendee.app.service;
 
 import com.twendee.app.model.dto.*;
-import com.twendee.app.model.entity.User;
+import freemarker.template.TemplateException;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
+import javax.mail.MessagingException;
+import java.io.IOException;
 
 public interface UserService {
     Message userCheckin(String email);
@@ -13,8 +14,8 @@ public interface UserService {
 
     ResponseEntity<?> userHistory(HistoryInput historyInput, Integer start, Integer limit);
 
-    //    void forgotPassword(String userId) throws Exception;
-//
+    void forgotPassword(Integer userId) throws TemplateException, IOException, MessagingException;
+
     ResponseEntity<?> updateProfile(InputProfileDTO inputProfileDTO, String email);
 
 

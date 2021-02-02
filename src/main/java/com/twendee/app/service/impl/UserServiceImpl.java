@@ -6,17 +6,20 @@ import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.UserService;
+import freemarker.template.TemplateException;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -29,11 +32,21 @@ public class UserServiceImpl implements UserService {
     final
     TimeKeepingRepository timeKeepingRepository;
 
+    final
+    PasswordEncoder passwordEncoder;
+
+    final
+    EmailServiceImpl emailService;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository) {
+    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository, PasswordEncoder passwordEncoder , EmailServiceImpl emailService) {
         this.userRepository = userRepository;
         this.timeKeepingRepository = timeKeepingRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
+
     }
+
 
     @Override
     public Message userCheckin(String email) {
@@ -141,6 +154,21 @@ public class UserServiceImpl implements UserService {
         } catch (Exception ex) {
             return ResponseEntity.ok(new Message("get history failed"));
         }
+    }
+
+    @Override
+    public void forgotPassword(Integer userId) throws TemplateException, IOException, MessagingException {
+        User user = userRepository.findByUserIdAndDeletedFalse(userId);
+
+
+        String newPass = RandomStringUtils.randomAlphanumeric(6);
+        user.setPass(passwordEncoder.encode(newPass));
+        userRepository.save(user);
+
+        Map<String, Object> params = new HashMap<>();
+
+        emailService.sendEmail(user.getEmail() ,"Quên mật khẩu", "ForgotPassword.html", params);
+
     }
 
     @Override
