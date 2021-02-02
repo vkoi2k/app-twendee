@@ -65,7 +65,7 @@ public class UserController {
         return userService.updateProfile(inputProfileDTO, email);
     }
 
-    @GetMapping("user")
+    @GetMapping("/user")
     public User profile(@RequestBody String token){
         return  jwtTokenProvider.getUserFromToken(token);
 
