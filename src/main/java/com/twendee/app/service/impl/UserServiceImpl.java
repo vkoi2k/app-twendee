@@ -1,12 +1,16 @@
 package com.twendee.app.service.impl;
 
+
+import com.twendee.app.component.MailSender;
 import com.twendee.app.config.JwtTokenProvider;
 import com.twendee.app.model.dto.*;
+import com.twendee.app.model.entity.Request;
 import com.twendee.app.model.entity.TimeKeeping;
 import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.UserService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -31,6 +36,19 @@ public class UserServiceImpl implements UserService {
     TimeKeepingRepository timeKeepingRepository;
 
     final
+
+    PasswordEncoder passwordEncoder;
+
+    final
+    MailSender mailSender;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository,PasswordEncoder passwordEncoder,MailSender mailSender) {
+        this.userRepository = userRepository;
+        this.timeKeepingRepository = timeKeepingRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.mailSender = mailSender;
+
     JwtTokenProvider jwtTokenProvider;
 
     @Autowired
@@ -38,6 +56,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.timeKeepingRepository = timeKeepingRepository;
         this.jwtTokenProvider = jwtTokenProvider;
+
     }
 
     @Override
@@ -146,6 +165,22 @@ public class UserServiceImpl implements UserService {
         } catch (Exception ex) {
             return ResponseEntity.ok(new Message("get history failed"));
         }
+    }
+
+    @Override
+    public void forgotPassword(Integer userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (!user.isPresent()) {
+
+        }
+        String newPass = RandomStringUtils.randomAlphanumeric(6);
+        user.get().setPass(passwordEncoder.encode(newPass));
+        userRepository.save(user.get());
+        mailSender.send(user.get().getEmail(),
+                    "Reset password ",
+                    "New password: " + newPass
+        );
+
     }
 
     @Override

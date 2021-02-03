@@ -65,12 +65,19 @@ public class UserController {
         return userService.updateProfile(inputProfileDTO, email);
     }
 
+
     @PostMapping("/user")
     public ResponseEntity<?> profile(@RequestBody InputToken inputToken){
 
         return userService.profile(inputToken);
 
 
+
+    @GetMapping("forgotPassword")
+    public ResponseEntity<?> forgotPassword(@RequestParam Integer id){
+
+        userService.forgotPassword(id);
+        return ResponseEntity.ok("Oke");
     }
 
 

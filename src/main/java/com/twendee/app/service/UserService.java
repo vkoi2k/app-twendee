@@ -13,8 +13,8 @@ public interface UserService {
 
     ResponseEntity<?> userHistory(HistoryInput historyInput, Integer start, Integer limit);
 
-    //    void forgotPassword(String userId) throws Exception;
-//
+    void forgotPassword(Integer userId) ;
+
     ResponseEntity<?> updateProfile(InputProfileDTO inputProfileDTO, String email);
 
     ResponseEntity<?> profile(InputToken inputToken);
