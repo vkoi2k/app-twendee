@@ -42,20 +42,17 @@ public class UserServiceImpl implements UserService {
     final
     MailSender mailSender;
 
+    final  JwtTokenProvider jwtTokenProvider;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository,PasswordEncoder passwordEncoder,MailSender mailSender) {
+    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository,PasswordEncoder passwordEncoder,MailSender mailSender,JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.timeKeepingRepository = timeKeepingRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
-
-    JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository, JwtTokenProvider jwtTokenProvider) {
-        this.userRepository = userRepository;
-        this.timeKeepingRepository = timeKeepingRepository;
         this.jwtTokenProvider = jwtTokenProvider;
+
+
 
     }
 

@@ -67,9 +67,11 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public ResponseEntity<?> profile(@RequestBody InputToken inputToken){
+    public ResponseEntity<?> profile(@RequestBody InputToken inputToken) {
 
         return userService.profile(inputToken);
+
+    }
 
 
 
