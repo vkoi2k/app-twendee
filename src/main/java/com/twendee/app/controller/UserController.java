@@ -84,7 +84,8 @@ public class UserController {
     @GetMapping("forgotPassword")
     public ResponseEntity<?> forgotPassword(@RequestParam Integer id){
 
-        return userService.forgotPassword(id);
+        userService.forgotPassword(id);
+        return ResponseEntity.ok("Oke");
     }
 
 
