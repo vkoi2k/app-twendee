@@ -13,7 +13,7 @@ import java.util.Date;
 public class SendRequestLateEarlyDTO{
     private String reason;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date date;
+    private long date;
     private int timeLate;
     private int timeEarly;
     private String email;

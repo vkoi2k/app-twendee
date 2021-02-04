@@ -6,6 +6,8 @@ import com.twendee.app.model.entity.Request;
 import com.twendee.app.reponsitory.RequestRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.RequestService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +41,25 @@ public class RequestServiceImpl implements RequestService {
             requests = requestRepository.findAll(Sort.by("requestId"));
         }
         List<RequestDTO> requestDTOS = new ArrayList<>();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT);
         for (Request request : requests) {
-            requestDTOS.add(new RequestDTO(request));
+            RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
+            if (request.getLateEarly()!=null&&request.getAbsenceOutside()==null&&request.getCheckoutSupport()==null){
+                requestDTO.setType("Đi muộn - Về sớm");
+                requestDTO.setTimeEarly(request.getLateEarly().getTimeEarly());
+                requestDTO.setTimeLate(request.getLateEarly().getTimeLate());
+            }if (request.getLateEarly()==null&&request.getAbsenceOutside()!=null&&request.getCheckoutSupport()==null){
+                requestDTO.setType("Xin nghỉ - Out side");
+                requestDTO.setStartDate(request.getAbsenceOutside().getStartDate().getTime());
+                requestDTO.setEndDate(request.getAbsenceOutside().getEndDate().getTime());
+            }if (request.getLateEarly()==null&&request.getAbsenceOutside()==null&&request.getCheckoutSupport()!=null){
+                requestDTO.setType("Quên check out");
+                requestDTO.setDate(request.getCheckoutSupport().getDate().getTime());
+            }
+            requestDTO.setTimeRequest(request.getTimeRequest().getTime());
+            requestDTOS.add(requestDTO);
         }
         return requestDTOS;
     }
@@ -48,7 +68,25 @@ public class RequestServiceImpl implements RequestService {
     public ResponseEntity<?> findById(Integer id) {
         try {
             Optional<Request> request = requestRepository.findById(id);
-            RequestDTO requestDTO = new RequestDTO(request.get());
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration()
+                    .setMatchingStrategy(MatchingStrategies.STRICT);
+            RequestDTO requestDTO = modelMapper.map(request.get(),RequestDTO.class);
+            requestDTO.setTimeRequest(request.get().getTimeRequest().getTime());
+            if (request.get().getLateEarly()!=null&&request.get().getAbsenceOutside()==null&&request.get().getCheckoutSupport()==null){
+                requestDTO.setType("Đi muộn - Về sớm");
+                requestDTO.setTimeEarly(request.get().getLateEarly().getTimeEarly());
+                requestDTO.setTimeLate(request.get().getLateEarly().getTimeLate());
+            }if (request.get().getLateEarly()==null&&request.get().getAbsenceOutside()!=null&&request.get().getCheckoutSupport()==null){
+                requestDTO.setType("Xin nghỉ - Out side");
+                requestDTO.setStartDate(request.get().getAbsenceOutside().getStartDate().getTime());
+                requestDTO.setEndDate(request.get().getAbsenceOutside().getEndDate().getTime());
+            }if (request.get().getLateEarly()==null&&request.get().getAbsenceOutside()==null&&request.get().getCheckoutSupport()!=null){
+                requestDTO.setType("Quên check out");
+                requestDTO.setDate(request.get().getCheckoutSupport().getDate().getTime());
+            }
+            requestDTO.setTimeRequest(request.get().getTimeRequest().getTime());
+//            RequestDTO requestDTO = new RequestDTO(request.get());
             return ResponseEntity.ok(requestDTO);
         } catch (Exception e) {
             e.printStackTrace();

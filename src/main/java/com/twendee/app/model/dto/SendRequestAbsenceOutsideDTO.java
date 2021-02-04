@@ -13,9 +13,9 @@ import java.util.Date;
 public class SendRequestAbsenceOutsideDTO{
     private String reason;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date startDate;
+    private long startDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date endDate;
+    private long endDate;
     private boolean type;
     private String email;
 
