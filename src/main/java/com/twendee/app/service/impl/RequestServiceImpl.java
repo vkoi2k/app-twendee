@@ -98,7 +98,6 @@ public class RequestServiceImpl implements RequestService {
             }
             requestDTO.setTimeRequest(request.get().getTimeRequest().getTime());
             requestDTO.setEmail(request.get().getUser().getEmail());
-//            RequestDTO requestDTO = new RequestDTO(request.get());
             return ResponseEntity.ok(requestDTO);
         } catch (Exception e) {
             e.printStackTrace();
