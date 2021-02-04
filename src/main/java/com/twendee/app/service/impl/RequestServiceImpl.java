@@ -52,7 +52,11 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setTimeEarly(request.getLateEarly().getTimeEarly());
                 requestDTO.setTimeLate(request.getLateEarly().getTimeLate());
             }if (request.getLateEarly()==null&&request.getAbsenceOutside()!=null&&request.getCheckoutSupport()==null){
-                requestDTO.setType("Xin nghỉ - Out side");
+                if (request.getAbsenceOutside().isType()==true) {
+                    requestDTO.setType("Xin nghỉ");
+                }else {
+                    requestDTO.setType("On site");
+                }
                 requestDTO.setStartDate(request.getAbsenceOutside().getStartDate().getTime());
                 requestDTO.setEndDate(request.getAbsenceOutside().getEndDate().getTime());
             }if (request.getLateEarly()==null&&request.getAbsenceOutside()==null&&request.getCheckoutSupport()!=null){
@@ -60,6 +64,7 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setDate(request.getCheckoutSupport().getDate().getTime());
             }
             requestDTO.setTimeRequest(request.getTimeRequest().getTime());
+            requestDTO.setEmail(request.getUser().getEmail());
             requestDTOS.add(requestDTO);
         }
         return requestDTOS;
@@ -80,7 +85,11 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setTimeEarly(request.get().getLateEarly().getTimeEarly());
                 requestDTO.setTimeLate(request.get().getLateEarly().getTimeLate());
             }if (request.get().getLateEarly()==null&&request.get().getAbsenceOutside()!=null&&request.get().getCheckoutSupport()==null){
-                requestDTO.setType("Xin nghỉ - Out side");
+                if (request.get().getAbsenceOutside().isType()==true) {
+                    requestDTO.setType("Xin nghỉ");
+                }else {
+                    requestDTO.setType("On site");
+                }
                 requestDTO.setStartDate(request.get().getAbsenceOutside().getStartDate().getTime());
                 requestDTO.setEndDate(request.get().getAbsenceOutside().getEndDate().getTime());
             }if (request.get().getLateEarly()==null&&request.get().getAbsenceOutside()==null&&request.get().getCheckoutSupport()!=null){
