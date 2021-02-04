@@ -102,7 +102,7 @@ public class RequestServiceImpl implements RequestService {
             return ResponseEntity.ok(requestDTO);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.ok(new Message("Request not found."));
+            return ResponseEntity.ok(new Message("Request not found!"));
         }
     }
 
