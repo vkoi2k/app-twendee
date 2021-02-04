@@ -48,6 +48,7 @@ public class RequestServiceImpl implements RequestService {
             RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
             if (request.getLateEarly()!=null&&request.getAbsenceOutside()==null&&request.getCheckoutSupport()==null){
                 requestDTO.setType("Đi muộn - Về sớm");
+                requestDTO.setDate(request.getLateEarly().getDate().getTime());
                 requestDTO.setTimeEarly(request.getLateEarly().getTimeEarly());
                 requestDTO.setTimeLate(request.getLateEarly().getTimeLate());
             }if (request.getLateEarly()==null&&request.getAbsenceOutside()!=null&&request.getCheckoutSupport()==null){
@@ -75,6 +76,7 @@ public class RequestServiceImpl implements RequestService {
             requestDTO.setTimeRequest(request.get().getTimeRequest().getTime());
             if (request.get().getLateEarly()!=null&&request.get().getAbsenceOutside()==null&&request.get().getCheckoutSupport()==null){
                 requestDTO.setType("Đi muộn - Về sớm");
+                requestDTO.setDate(request.get().getLateEarly().getDate().getTime());
                 requestDTO.setTimeEarly(request.get().getLateEarly().getTimeEarly());
                 requestDTO.setTimeLate(request.get().getLateEarly().getTimeLate());
             }if (request.get().getLateEarly()==null&&request.get().getAbsenceOutside()!=null&&request.get().getCheckoutSupport()==null){
@@ -86,6 +88,7 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setDate(request.get().getCheckoutSupport().getDate().getTime());
             }
             requestDTO.setTimeRequest(request.get().getTimeRequest().getTime());
+            requestDTO.setEmail(request.get().getUser().getEmail());
 //            RequestDTO requestDTO = new RequestDTO(request.get());
             return ResponseEntity.ok(requestDTO);
         } catch (Exception e) {
