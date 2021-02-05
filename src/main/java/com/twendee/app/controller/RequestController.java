@@ -48,6 +48,15 @@ public class RequestController {
                                            @RequestParam(value = "limit", required = false) Integer limit) {
         return  requestService.findByType(type,page,limit);
 
+
+    }
+
+    @GetMapping(value = "/requests/time", params = "date")
+    public List<RequestDTO> getListRequestByDate
+            (@RequestParam long date,
+             @RequestParam(required = false) Integer page,
+             @RequestParam(required = false) Integer limit) {
+        return requestService.getListRequestByDate(page, limit, date);
     }
 
 

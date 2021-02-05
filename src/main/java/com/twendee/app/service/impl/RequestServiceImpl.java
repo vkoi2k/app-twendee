@@ -2,7 +2,9 @@ package com.twendee.app.service.impl;
 
 import com.twendee.app.model.dto.Message;
 import com.twendee.app.model.dto.RequestDTO;
+import com.twendee.app.model.dto.TimeKeepingDTO;
 import com.twendee.app.model.entity.Request;
+import com.twendee.app.model.entity.TimeKeeping;
 import com.twendee.app.reponsitory.RequestRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.RequestService;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -191,6 +194,34 @@ public class RequestServiceImpl implements RequestService {
             requestDTOS.add(new RequestDTO(request));
         }
         return requestDTOS;
+    }
+
+    @Override
+    public List<RequestDTO> getListRequestByDate(Integer page, Integer limit, long dateInt) {
+        try {
+            Date date = new Date(dateInt);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            List<Request> requestList;
+            if (page != null && limit != null) {
+                Page<Request> requestPage = requestRepository.findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqual
+                        (simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
+                                simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59"),
+                                PageRequest.of(page, limit));
+                requestList=requestPage.toList();
+            }else{
+                requestList=requestRepository.findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqual
+                        (simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
+                                simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59"));
+            }
+            List<RequestDTO> requestDTOList=new ArrayList<>();
+            for (Request request: requestList){
+                requestDTOList.add(new RequestDTO(request));
+            }
+            return requestDTOList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
