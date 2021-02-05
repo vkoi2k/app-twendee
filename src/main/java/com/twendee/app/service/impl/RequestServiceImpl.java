@@ -165,8 +165,8 @@ public class RequestServiceImpl implements RequestService {
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT);
         for (Request request: requests) {
-            if (type=="1"&&request.getAbsenceOutside()!=null&&request.getAbsenceOutside().isType()==true){
-                RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
+            if (type.equals("1")&&request.getAbsenceOutside()!=null&&request.getAbsenceOutside().isType()==true) {
+                RequestDTO requestDTO = modelMapper.map(request, RequestDTO.class);
                 requestDTO.setStartDate(request.getAbsenceOutside().getStartDate().getTime());
                 requestDTO.setEndDate(request.getAbsenceOutside().getEndDate().getTime());
                 requestDTO.setType("Xin nghỉ");
@@ -174,7 +174,8 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setEmail(request.getUser().getEmail());
                 requestDTOS.add(requestDTO);
 
-            }if (type=="2"&&request.getAbsenceOutside()!=null&&request.getAbsenceOutside().isType()==false){
+
+            }if (type.equals("2")&&request.getAbsenceOutside()!=null&&request.getAbsenceOutside().isType()==false){
                 RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
                 requestDTO.setStartDate(request.getAbsenceOutside().getStartDate().getTime());
                 requestDTO.setEndDate(request.getAbsenceOutside().getEndDate().getTime());
@@ -183,7 +184,7 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setEmail(request.getUser().getEmail());
                 requestDTOS.add(requestDTO);
 
-            }if (type=="3"&&request.getLateEarly()!=null){
+            }if (type.equals("3")&&request.getLateEarly() != null){
                 RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
                 requestDTO.setType("Đi muộn - Về sớm");
                 requestDTO.setDate(request.getLateEarly().getDate().getTime());
@@ -193,7 +194,7 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setEmail(request.getUser().getEmail());
                 requestDTOS.add(requestDTO);
 
-            }if (type=="4"&&request.getCheckoutSupport()!=null){
+            }if (type.equals("4")&&request.getCheckoutSupport()!=null){
                 RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
                 requestDTO.setType("Quên check out");
                 requestDTO.setDate(request.getCheckoutSupport().getDate().getTime());
