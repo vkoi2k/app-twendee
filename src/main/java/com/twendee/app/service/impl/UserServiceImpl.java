@@ -165,8 +165,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void forgotPassword(Integer userId) {
-        Optional<User> user = userRepository.findById(userId);
+    public void forgotPassword(InputForgotPassword inputForgotPassword ) {
+        String email = inputForgotPassword.getEmail();
+        User userCurrent = userRepository.getUserByEmail(email);
+        Integer id = userCurrent.getUserId();
+        Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
 
         }

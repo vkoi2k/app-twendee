@@ -13,7 +13,7 @@ public interface UserService {
 
     ResponseEntity<?> userHistory(HistoryInput historyInput, Integer start, Integer limit);
 
-    void forgotPassword(Integer userId) ;
+    void forgotPassword(InputForgotPassword inputForgotPassword) ;
 
     ResponseEntity<?> updateProfile(InputProfileDTO inputProfileDTO, String email);
 

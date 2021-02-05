@@ -59,7 +59,7 @@ public class UserController {
         return userService.userHistory(historyInput, start, limit);
     }
 
-    @PostMapping("/user/update")
+    @PostMapping("/update")
     public ResponseEntity<?> updateProfile(@RequestParam String email,
                                          @RequestBody InputProfileDTO inputProfileDTO){
         return userService.updateProfile(inputProfileDTO, email);
@@ -75,10 +75,10 @@ public class UserController {
 
 
 
-    @GetMapping("forgotPassword")
-    public ResponseEntity<?> forgotPassword(@RequestParam Integer id){
+    @PostMapping("forgotPassword")
+    public ResponseEntity<?> forgotPassword(@RequestBody InputForgotPassword inputForgotPassword){
 
-        userService.forgotPassword(id);
+        userService.forgotPassword(inputForgotPassword);
         return ResponseEntity.ok("Oke");
     }
 
