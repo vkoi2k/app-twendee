@@ -82,12 +82,14 @@ public class RequestServiceImpl implements RequestService {
                     .setMatchingStrategy(MatchingStrategies.STRICT);
             RequestDTO requestDTO = modelMapper.map(request.get(),RequestDTO.class);
             requestDTO.setTimeRequest(request.get().getTimeRequest().getTime());
-            if (request.get().getLateEarly()!=null&&request.get().getAbsenceOutside()==null&&request.get().getCheckoutSupport()==null){
+            if (request.get().getLateEarly()!=null&&request.get().getAbsenceOutside()==null
+                    &&request.get().getCheckoutSupport()==null){
                 requestDTO.setType("Đi muộn - Về sớm");
                 requestDTO.setDate(request.get().getLateEarly().getDate().getTime());
                 requestDTO.setTimeEarly(request.get().getLateEarly().getTimeEarly());
                 requestDTO.setTimeLate(request.get().getLateEarly().getTimeLate());
-            }if (request.get().getLateEarly()==null&&request.get().getAbsenceOutside()!=null&&request.get().getCheckoutSupport()==null){
+            }if (request.get().getLateEarly()==null&&request.get().getAbsenceOutside()!=null
+                    &&request.get().getCheckoutSupport()==null){
                 if (request.get().getAbsenceOutside().isType()==true) {
                     requestDTO.setType("Xin nghỉ");
                 }else {
@@ -95,7 +97,8 @@ public class RequestServiceImpl implements RequestService {
                 }
                 requestDTO.setStartDate(request.get().getAbsenceOutside().getStartDate().getTime());
                 requestDTO.setEndDate(request.get().getAbsenceOutside().getEndDate().getTime());
-            }if (request.get().getLateEarly()==null&&request.get().getAbsenceOutside()==null&&request.get().getCheckoutSupport()!=null){
+            }if (request.get().getLateEarly()==null&&request.get().getAbsenceOutside()==null
+                    &&request.get().getCheckoutSupport()!=null){
                 requestDTO.setType("Quên check out");
                 requestDTO.setDate(request.get().getCheckoutSupport().getDate().getTime());
             }
@@ -149,49 +152,52 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<RequestDTO> findByType(String type, Integer page, Integer limit) {
-        List<Request> requests = null;
-        Page<Request> pages ;
-
+        List<Request> requests;
         if (page != null && limit != null) {
-            if (type == "Đi muộn - Về sớm") {
-                pages = requestRepository.
-                        findByLateEarlyIsNotNull(PageRequest.of(page, limit, Sort.by("requestId")));
-                requests = pages.toList();
-
-            }
-            else if (type == "Xin nghỉ - Out side") {
-                 pages = requestRepository.
-                        findByAbsenceOutsideIsNotNull(PageRequest.of(page, limit, Sort.by("requestId")));
-                requests = pages.toList();
-
-            }
-            else if (type == "Quên check out") {
-                 pages = requestRepository.
-                        findByCheckoutSupportIsNotNull(PageRequest.of(page, limit, Sort.by("requestId")));
-                requests = pages.toList();
-
-            }
-
+            Page<Request> pages = requestRepository.
+                    findAll(PageRequest.of(page, limit, Sort.by("requestId")));
+            requests = pages.toList();
         } else {
-
-            if (type == "Đi muộn - Về sớm") {
-                requests = requestRepository.findByLateEarlyIsNotNull(Sort.by("requestId"));
-
-            }
-            else if (type == "Xin nghỉ - Out side") {
-                requests = requestRepository.findByAbsenceOutsideIsNotNull(Sort.by("requestId"));
-
-            }
-            else if (type == "Quên check out") {
-                requests = requestRepository.findByCheckoutSupportIsNotNull(Sort.by("requestId"));
-
-            }
-
+            requests = requestRepository.findAll(Sort.by("requestId"));
         }
-
         List<RequestDTO> requestDTOS = new ArrayList<>();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT);
         for (Request request: requests) {
-            requestDTOS.add(new RequestDTO(request));
+            if (type=="1"&&request.getAbsenceOutside()!=null&&request.getAbsenceOutside().isType()==true){
+                RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
+                requestDTO.setStartDate(request.getAbsenceOutside().getStartDate().getTime());
+                requestDTO.setEndDate(request.getAbsenceOutside().getEndDate().getTime());
+                requestDTO.setType("Xin nghỉ");
+                requestDTO.setTimeRequest(request.getTimeRequest().getTime());
+                requestDTO.setEmail(request.getUser().getEmail());
+                requestDTOS.add(requestDTO);
+            }if (type=="2"&&request.getAbsenceOutside()!=null&&request.getAbsenceOutside().isType()==false){
+                RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
+                requestDTO.setStartDate(request.getAbsenceOutside().getStartDate().getTime());
+                requestDTO.setEndDate(request.getAbsenceOutside().getEndDate().getTime());
+                requestDTO.setType("On site");
+                requestDTO.setTimeRequest(request.getTimeRequest().getTime());
+                requestDTO.setEmail(request.getUser().getEmail());
+                requestDTOS.add(requestDTO);
+            }if (type=="3"&&request.getLateEarly()!=null){
+                RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
+                requestDTO.setType("Đi muộn - Về sớm");
+                requestDTO.setDate(request.getLateEarly().getDate().getTime());
+                requestDTO.setTimeEarly(request.getLateEarly().getTimeEarly());
+                requestDTO.setTimeLate(request.getLateEarly().getTimeLate());
+                requestDTO.setTimeRequest(request.getTimeRequest().getTime());
+                requestDTO.setEmail(request.getUser().getEmail());
+                requestDTOS.add(requestDTO);
+            }if (type=="4"&&request.getCheckoutSupport()!=null){
+                RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
+                requestDTO.setType("Quên check out");
+                requestDTO.setDate(request.getCheckoutSupport().getDate().getTime());
+                requestDTO.setTimeRequest(request.getTimeRequest().getTime());
+                requestDTO.setEmail(request.getUser().getEmail());
+                requestDTOS.add(requestDTO);
+            }
         }
         return requestDTOS;
     }
