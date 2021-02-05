@@ -173,6 +173,7 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setTimeRequest(request.getTimeRequest().getTime());
                 requestDTO.setEmail(request.getUser().getEmail());
                 requestDTOS.add(requestDTO);
+
             }if (type=="2"&&request.getAbsenceOutside()!=null&&request.getAbsenceOutside().isType()==false){
                 RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
                 requestDTO.setStartDate(request.getAbsenceOutside().getStartDate().getTime());
@@ -181,6 +182,7 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setTimeRequest(request.getTimeRequest().getTime());
                 requestDTO.setEmail(request.getUser().getEmail());
                 requestDTOS.add(requestDTO);
+
             }if (type=="3"&&request.getLateEarly()!=null){
                 RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
                 requestDTO.setType("Đi muộn - Về sớm");
@@ -190,6 +192,7 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setTimeRequest(request.getTimeRequest().getTime());
                 requestDTO.setEmail(request.getUser().getEmail());
                 requestDTOS.add(requestDTO);
+
             }if (type=="4"&&request.getCheckoutSupport()!=null){
                 RequestDTO requestDTO = modelMapper.map(request,RequestDTO.class);
                 requestDTO.setType("Quên check out");
@@ -197,6 +200,7 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setTimeRequest(request.getTimeRequest().getTime());
                 requestDTO.setEmail(request.getUser().getEmail());
                 requestDTOS.add(requestDTO);
+
             }
         }
         return requestDTOS;
