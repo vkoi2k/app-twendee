@@ -60,9 +60,9 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> updateProfile(@RequestParam String email,
+    public ResponseEntity<?> updateProfile(@RequestParam Integer id,
                                          @RequestBody InputProfileDTO inputProfileDTO){
-        return userService.updateProfile(inputProfileDTO, email);
+        return userService.updateProfile(inputProfileDTO, id);
     }
 
 

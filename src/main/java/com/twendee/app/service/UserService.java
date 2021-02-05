@@ -2,6 +2,7 @@ package com.twendee.app.service;
 
 import com.twendee.app.model.dto.*;
 import com.twendee.app.model.entity.User;
+import io.swagger.models.auth.In;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface UserService {
 
     void forgotPassword(InputForgotPassword inputForgotPassword) ;
 
-    ResponseEntity<?> updateProfile(InputProfileDTO inputProfileDTO, String email);
+    ResponseEntity<?> updateProfile(InputProfileDTO inputProfileDTO, Integer id);
 
     ResponseEntity<?> profile(InputToken inputToken);
 

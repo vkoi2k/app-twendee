@@ -42,16 +42,15 @@ public class UserServiceImpl implements UserService {
     final
     MailSender mailSender;
 
-    final  JwtTokenProvider jwtTokenProvider;
+    final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository,PasswordEncoder passwordEncoder,MailSender mailSender,JwtTokenProvider jwtTokenProvider) {
+    public UserServiceImpl(UserRepository userRepository, TimeKeepingRepository timeKeepingRepository, PasswordEncoder passwordEncoder, MailSender mailSender, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.timeKeepingRepository = timeKeepingRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
         this.jwtTokenProvider = jwtTokenProvider;
-
 
 
     }
@@ -165,7 +164,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void forgotPassword(InputForgotPassword inputForgotPassword ) {
+    public void forgotPassword(InputForgotPassword inputForgotPassword) {
         String email = inputForgotPassword.getEmail();
         User userCurrent = userRepository.getUserByEmail(email);
         Integer id = userCurrent.getUserId();
@@ -177,34 +176,33 @@ public class UserServiceImpl implements UserService {
         user.get().setPass(passwordEncoder.encode(newPass));
         userRepository.save(user.get());
         mailSender.send(user.get().getEmail(),
-                    "Reset password ",
-                    "New password: " + newPass
+                "Reset password ",
+                "New password: " + newPass
         );
 
     }
 
     @Override
-    public ResponseEntity<?> updateProfile(InputProfileDTO inputProfileDTO, String email) {
-
-            try{
-                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-                ModelMapper modelMapper = new ModelMapper();
-                modelMapper.getConfiguration()
-                        .setMatchingStrategy(MatchingStrategies.STRICT);
-                User oldUser = userRepository.getUserByEmailAndDeletedFalse(email);
-                User user = modelMapper.map(inputProfileDTO, User.class);
-                user.setUserId(oldUser.getUserId());
-                user.setRole(oldUser.isRole());
-                user.setPass(oldUser.getPass());
-                user.setEmail(oldUser.getEmail());
-                user.setDob(sdf.parse(inputProfileDTO.getBirthday()));
-                return ResponseEntity.ok(modelMapper.map(userRepository.save(user),UserDTO.class));
-
-            }catch (Exception e){
-                e.printStackTrace();
-                return ResponseEntity.ok(new Message("update failed"));
-            }
+    public ResponseEntity<?> updateProfile(InputProfileDTO inputProfileDTO, Integer id) {
+        try {
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration()
+                    .setMatchingStrategy(MatchingStrategies.STRICT);
+            User oldUser = userRepository.findByUserIdAndDeletedFalse(id);
+            User user = modelMapper.map(inputProfileDTO, User.class);
+            user.setUserId(oldUser.getUserId());
+            user.setRole(oldUser.isRole());
+            user.setPass(oldUser.getPass());
+            user.setDob(new Date(inputProfileDTO.getBirthday()));
+            user.setEmail(oldUser.getEmail());
+            UserDTO updatedUserDTO = modelMapper.map(userRepository.save(user), UserDTO.class);
+            updatedUserDTO.setBirthday(user.getDob().getTime());
+            return ResponseEntity.ok(updatedUserDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new Message("update failed"));
         }
+    }
 
     @Override
     public ResponseEntity<?> profile(InputToken inputToken) {
