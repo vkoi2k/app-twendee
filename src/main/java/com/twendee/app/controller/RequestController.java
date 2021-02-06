@@ -21,8 +21,20 @@ public class RequestController {
 
     @GetMapping("/requests")
     public List<RequestDTO> findAll(@RequestParam(value = "page", required = false) Integer page,
-                                    @RequestParam(value = "limit", required = false) Integer limit) {
-        return requestService.findAll(page, limit);
+                                    @RequestParam(value = "limit", required = false) Integer limit,
+                                    @RequestParam(value = "isAccepted", required = false) Boolean isAccepted,
+                                    @RequestParam(value = "type", required = false) String type){
+        if (isAccepted!=null){
+            if (isAccepted == true) {
+                return requestService.findByIsAcceptTrue(page, limit);
+            } else {
+                return requestService.findByIsAcceptFalse(page, limit);
+            }
+        }else if (type!=null){
+            return  requestService.findByType(type,page,limit);
+        }else {
+            return requestService.findAll(page, limit);
+        }
     }
 
     @GetMapping("/requests/{id}")
@@ -30,26 +42,26 @@ public class RequestController {
         return requestService.findById(id);
     }
 
-    @GetMapping(value = "/requests", params = "isAccept")
-    public List<RequestDTO> findByIsAccept(@RequestParam Boolean isAccept,
-                                           @RequestParam(value = "page", required = false) Integer page,
-                                           @RequestParam(value = "limit", required = false) Integer limit) {
-        if (isAccept == true) {
-            return requestService.findByIsAcceptTrue(page, limit);
-        } else {
-            return requestService.findByIsAcceptFalse(page, limit);
-
-        }
-    }
-
-    @GetMapping(value = "/requests1", params = "type")
-    public List<RequestDTO> findByType(@RequestParam String type,
-                                           @RequestParam(value = "page", required = false) Integer page,
-                                           @RequestParam(value = "limit", required = false) Integer limit) {
-        return  requestService.findByType(type,page,limit);
-
-
-    }
+//    @GetMapping(value = "/requests", params = "isAccept")
+//    public List<RequestDTO> findByIsAccept(@RequestParam Boolean isAccept,
+//                                           @RequestParam(value = "page", required = false) Integer page,
+//                                           @RequestParam(value = "limit", required = false) Integer limit) {
+//        if (isAccept == true) {
+//            return requestService.findByIsAcceptTrue(page, limit);
+//        } else {
+//            return requestService.findByIsAcceptFalse(page, limit);
+//
+//        }
+//    }
+//
+//    @GetMapping(value = "/requests1", params = "type")
+//    public List<RequestDTO> findByType(@RequestParam String type,
+//                                           @RequestParam(value = "page", required = false) Integer page,
+//                                           @RequestParam(value = "limit", required = false) Integer limit) {
+//        return  requestService.findByType(type,page,limit);
+//
+//
+//    }
 
     @GetMapping(value = "/requests/time", params = "date")
     public List<RequestDTO> getListRequestByDate
