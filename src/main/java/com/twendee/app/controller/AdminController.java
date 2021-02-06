@@ -44,13 +44,5 @@ public class AdminController {
         return adminService.getListTimekeepingByDate(page, limit, date);
     }
 
-    @GetMapping(value = "/admin/time-keepings", params = "month")
-    public List<TimeKeepingDTO> getListTimekeepingByMonth
-            (@RequestParam Integer month,
-             @RequestParam Integer year,
-             @RequestParam(required = false) Integer page,
-             @RequestParam(required = false) Integer limit) {
-        return adminService.getListTimekeepingByMonth(page, limit, month, year);
-    }
 
 }
