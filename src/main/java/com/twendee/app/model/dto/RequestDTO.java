@@ -15,7 +15,7 @@ public class RequestDTO {
     private Integer requestId;
     private long timeRequest;
     private String reason;
-    private boolean isAccept;
+    private Boolean isAccept;
     private String type;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private long startDate;

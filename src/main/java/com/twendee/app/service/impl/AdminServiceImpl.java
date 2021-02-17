@@ -66,7 +66,7 @@ public class AdminServiceImpl implements AdminService {
                 //gửi mail cho người gửi request
                 mailSender.send(optionalRequest.get().getUser().getEmail(),
                         "Chấp thuận xin nghỉ/onside ngày: "
-                                + simpleDateFormat.format(request.getLateEarly().getDate()),
+                                + simpleDateFormat.format(request.getAbsenceOutside().getStartDate()),
                         "Xin nghỉ/onside từ ngày: " + simpleDateFormat.format(request.getAbsenceOutside().getStartDate())
                                 + " đến ngày " + simpleDateFormat.format(request.getAbsenceOutside().getEndDate())
                                 + "\n Người gửi: " + request.getUser().getName()
@@ -83,12 +83,14 @@ public class AdminServiceImpl implements AdminService {
                 //gửi mail cho người gửi request
                 mailSender.send(optionalRequest.get().getUser().getEmail(),
                         "Chấp thuận checkout bù ngày: "
-                                + simpleDateFormat.format(request.getLateEarly().getDate()),
+                                + simpleDateFormat.format(request.getCheckoutSupport().getDate()),
                         "Xin checkout bù ngày: " + simpleDateFormat.format(request.getCheckoutSupport().getDate())
                                 + "\n Người gửi: " + request.getUser().getName()
                                 + "\n Ngày gửi: " + simpleDateFormat.format(request.getTimeRequest())
                                 + "\n Lý do: " + request.getReason()
                                 + "\n Đã được chấp thuận.");
+            }else{
+                return false;
             }
             return true;
         } else {
@@ -127,7 +129,7 @@ public class AdminServiceImpl implements AdminService {
                 //gửi mail cho người gửi request
                 mailSender.send(optionalRequest.get().getUser().getEmail(),
                         "Chấp thuận xin nghỉ/onside ngày: "
-                                + simpleDateFormat.format(request.getLateEarly().getDate()),
+                                + simpleDateFormat.format(request.getAbsenceOutside().getStartDate()),
                         "Xin nghỉ/onside từ ngày: " + simpleDateFormat.format(request.getAbsenceOutside().getStartDate())
                                 + " đến ngày " + simpleDateFormat.format(request.getAbsenceOutside().getEndDate())
                                 + "\n Người gửi: " + request.getUser().getName()
@@ -144,12 +146,14 @@ public class AdminServiceImpl implements AdminService {
                 //gửi mail cho người gửi request
                 mailSender.send(optionalRequest.get().getUser().getEmail(),
                         "Chấp thuận checkout bù ngày: "
-                                + simpleDateFormat.format(request.getLateEarly().getDate()),
+                                + simpleDateFormat.format(request.getCheckoutSupport().getDate()),
                         "Xin checkout bù ngày: " + simpleDateFormat.format(request.getCheckoutSupport().getDate())
                                 + "\n Người gửi: " + request.getUser().getName()
                                 + "\n Ngày gửi: " + simpleDateFormat.format(request.getTimeRequest())
                                 + "\n Lý do: " + request.getReason()
                                 + "\n Đã bị từ chối.");
+            }else{
+                return false;
             }
             return true;
         } else {
@@ -160,11 +164,25 @@ public class AdminServiceImpl implements AdminService {
     public void absencdOutside(Request request) {
         Date startDate = request.getAbsenceOutside().getStartDate();
         Date endDate = request.getAbsenceOutside().getEndDate();
-        if (startDate.before(new Date())) {       //thời gian duyệt request chứa ngày xin phép trong quá khứ và tương lai
+        System.out.println("startdate: "+startDate.toString() +" ----- enddate: "+endDate.toString());
+        if(!removeTime(endDate).after(new Date())){
+            List<TimeKeeping> timeKeepingList = timeKeepingRepository
+                    .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
+                            (request.getUser(),
+                                    removeTime(startDate)
+                                    , removeTime(endDate));
+            for (TimeKeeping timeKeeping : timeKeepingList) {
+                timeKeeping.setRequest(request);
+                timeKeepingRepository.save(timeKeeping);
+            }
+        }
+        else if (removeTime(startDate).before(new Date())) {       //thời gian duyệt request chứa ngày xin phép trong quá khứ và tương lai
             //set Request cho những ngày đã qua - hôm nay
             List<TimeKeeping> timeKeepingList = timeKeepingRepository
                     .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
-                            (request.getUser(), startDate, new Date());
+                            (request.getUser(),
+                                    removeTime(startDate)
+                                    , new Date());
             for (TimeKeeping timeKeeping : timeKeepingList) {
                 timeKeeping.setRequest(request);
                 timeKeepingRepository.save(timeKeeping);
@@ -176,22 +194,21 @@ public class AdminServiceImpl implements AdminService {
                  date.setTime(date.getTime() + 86_400_000)) {
                 TimeKeeping timeKeeping = new TimeKeeping();
                 timeKeeping.setUser(request.getUser());
-                timeKeeping.setDate(date);
+                Date date2=new Date(date.getTime());
+                timeKeeping.setDate(date2);
                 timeKeeping.setRequest(request);
                 timeKeepingRepository.save(timeKeeping);
             }
         } else {  //thời gian duyệt request chỉ chứa ngày trong tương lai
-            List<TimeKeeping> timeKeepingList = timeKeepingRepository
-                    .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
-                            (request.getUser(), startDate, endDate);
-            Date date = removeTime(startDate);
-            for (TimeKeeping timeKeeping : timeKeepingList) {
-                if (date.after(endDate)) break;
+            for (Date date = removeTime(startDate); !date.after(removeTime(endDate));
+                 date.setTime(date.getTime() + 86_400_000)) {
+                TimeKeeping timeKeeping =new TimeKeeping();
                 timeKeeping.setUser(request.getUser());
-                timeKeeping.setDate(date);
+                Date date2=new Date(date.getTime());
+                timeKeeping.setDate(date2);
                 timeKeeping.setRequest(request);
                 timeKeepingRepository.save(timeKeeping);
-                date.setTime(date.getTime() + 86_400_000);
+                System.out.println("thoi gian: "+date.toString());
             }
         }
     }
@@ -212,7 +229,7 @@ public class AdminServiceImpl implements AdminService {
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             Date date = request.getLateEarly().getDate();
-            if (date.before(new Date())) {
+            if (removeTime(date).before(new Date())) {
                 TimeKeeping timeKeeping = timeKeepingRepository
                         .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
                                 (request.getUser(),
