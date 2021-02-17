@@ -164,8 +164,7 @@ public class AdminServiceImpl implements AdminService {
     public void absencdOutside(Request request) {
         Date startDate = request.getAbsenceOutside().getStartDate();
         Date endDate = request.getAbsenceOutside().getEndDate();
-        System.out.println("startdate: "+startDate.toString() +" ----- enddate: "+endDate.toString());
-        if(!removeTime(endDate).after(new Date())){
+        if(!removeTime(endDate).after(new Date())){   //tại thời điểm duyệt chứa chỉ các ngày xin phép trong quá khứ
             List<TimeKeeping> timeKeepingList = timeKeepingRepository
                     .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
                             (request.getUser(),
@@ -240,7 +239,7 @@ public class AdminServiceImpl implements AdminService {
             } else {
                 TimeKeeping timeKeeping = new TimeKeeping();
                 timeKeeping.setUser(request.getUser());
-                timeKeeping.setDate(date);
+                timeKeeping.setDate(removeTime(date));
                 timeKeeping.setRequest(request);
                 timeKeepingRepository.save(timeKeeping);
             }
@@ -252,13 +251,14 @@ public class AdminServiceImpl implements AdminService {
     public void checkoutSupport(Request request) {
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = request.getLateEarly().getDate();
+            SimpleDateFormat stringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date date = request.getCheckoutSupport().getDate();
             TimeKeeping timeKeeping = timeKeepingRepository
                     .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
                             (request.getUser(),
                                     simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
                                     simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59")).get(0);
-            timeKeeping.setCheckout(simpleDateFormat.parse(simpleDateFormat.format(date) + " 18:00:00"));
+            timeKeeping.setCheckout(stringToDate.parse(simpleDateFormat.format(date) + " 18:00:00"));
             timeKeeping.setRequest(request);
             timeKeepingRepository.save(timeKeeping);
         } catch (Exception e) {
