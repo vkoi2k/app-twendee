@@ -20,19 +20,22 @@ public class RequestController {
     }
 
     @GetMapping("/requests")
-    public List<RequestDTO> findAll(@RequestParam(value = "page", required = false) Integer page,
+    public List<RequestDTO> findByIsAcceptAndType(@RequestParam(value = "page", required = false) Integer page,
                                     @RequestParam(value = "limit", required = false) Integer limit,
                                     @RequestParam(value = "isAccepted", required = false) Boolean isAccepted,
-                                    @RequestParam(value = "type", required = false) String type){
-        if (isAccepted!=null){
+                                    @RequestParam(value = "type", required = false) String type) {
+        if (isAccepted != null && type == null) {
             if (isAccepted == true) {
                 return requestService.findByIsAcceptTrue(page, limit);
             } else {
                 return requestService.findByIsAcceptFalse(page, limit);
             }
-        }else if (type!=null){
-            return  requestService.findByType(type,page,limit);
-        }else {
+        } else if ( type != null && isAccepted == null){
+            return requestService.findByType(type, page, limit);
+        } else if (type != null && isAccepted != null) {
+            return requestService.findByIsAcceptAndType(isAccepted, type, page, limit);
+
+        } else {
             return requestService.findAll(page, limit);
         }
     }
@@ -70,7 +73,6 @@ public class RequestController {
              @RequestParam(required = false) Integer limit) {
         return requestService.getListRequestByDate(page, limit, date);
     }
-
 
 
 }
