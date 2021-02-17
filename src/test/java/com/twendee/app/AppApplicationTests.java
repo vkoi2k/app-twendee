@@ -1,20 +1,24 @@
 package com.twendee.app;
 
 import com.twendee.app.component.MailSender;
+import com.twendee.app.model.entity.Request;
 import com.twendee.app.model.entity.TimeKeeping;
 import com.twendee.app.model.entity.User;
+import com.twendee.app.reponsitory.RequestRepository;
 import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.StaffService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 class AppApplicationTests {
@@ -30,8 +34,11 @@ class AppApplicationTests {
     @Autowired
     StaffService staffService;
 
+    @Autowired
+    RequestRepository requestRepository;
+
     @Test
-    void contextLoads() {
+    void autoCreatTimeKeeping() {
         try {
             SimpleDateFormat DateToString = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -48,9 +55,17 @@ class AppApplicationTests {
                 System.out.println("tk: " + tk.getUser().getUserId());
                 userIds.add(tk.getUser().getUserId());
             }
-            List<User> users = userRepository.findByUserIdNotInAndDeletedFalse(userIds);
+            List<User> users;
+            if(userIds.size()==0){
+                users=userRepository.findByDeletedFalse(Sort.by("userId"));
+            }else users = userRepository.findByUserIdNotInAndDeletedFalse(userIds);
+
             for (User user : users) {
                 System.out.println("id not in: "+user.getUserId());
+                TimeKeeping timeKeeping = new TimeKeeping();
+                timeKeeping.setUser(user);
+                timeKeeping.setDate(new Date());
+                timeKeepingRepository.save(timeKeeping);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,17 +79,13 @@ class AppApplicationTests {
 
     @Test
     void testList(){
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date endDate = simpleDateFormat.parse("25/02/2021");
-            Date date;
-            for (date = removeTime(new Date(new Date().getTime()+86_400_000)); date.before(removeTime(endDate)) || date.equals(removeTime(endDate));
-                 date.setTime(date.getTime() + 86_400_000)) {
-                System.out.println(simpleDateFormat.format(date));
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+        Optional<Request> optionalRequest = requestRepository.findById(1);
+        Request request=optionalRequest.get();
+        TimeKeeping timeKeeping =new TimeKeeping();
+        timeKeeping.setUser(request.getUser());
+        timeKeeping.setDate(new Date());
+        timeKeeping.setRequest(request);
+        timeKeepingRepository.save(timeKeeping);
     }
 
     public Date removeTime(Date date){

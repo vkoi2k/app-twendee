@@ -29,7 +29,7 @@ public class Request extends BaseEntity {
     private String reason;
 
     @Column(nullable = true)
-    private boolean isAccept;
+    private Boolean isAccept;
 
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "absence_outside_id")
@@ -49,4 +49,12 @@ public class Request extends BaseEntity {
 
     @OneToMany(mappedBy = "request", fetch = FetchType.EAGER)
     private Set<TimeKeeping> timeKeepings;
+
+    public void setAccept(Boolean isAccept){
+        this.isAccept=isAccept;
+    }
+
+    public Boolean isAccept(){
+        return this.isAccept;
+    }
 }
