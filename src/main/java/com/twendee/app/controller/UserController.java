@@ -78,8 +78,8 @@ public class UserController {
     @PostMapping("forgotPassword")
     public ResponseEntity<?> forgotPassword(@RequestBody InputForgotPassword inputForgotPassword){
 
-        userService.forgotPassword(inputForgotPassword);
-        return ResponseEntity.ok("Oke");
+        return  userService.forgotPassword(inputForgotPassword);
+
     }
 
 

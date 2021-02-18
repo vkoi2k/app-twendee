@@ -14,7 +14,7 @@ public interface UserService {
 
     ResponseEntity<?> userHistory(HistoryInput historyInput, Integer start, Integer limit);
 
-    void forgotPassword(InputForgotPassword inputForgotPassword) ;
+    ResponseEntity<?> forgotPassword(InputForgotPassword inputForgotPassword) ;
 
     ResponseEntity<?> updateProfile(InputProfileDTO inputProfileDTO, Integer id);
 
