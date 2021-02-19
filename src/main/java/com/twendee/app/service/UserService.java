@@ -12,7 +12,7 @@ public interface UserService {
 
     Message userCheckout(String email);
 
-    ResponseEntity<?> userHistory(HistoryInput historyInput, Integer start, Integer limit);
+    ResponseEntity<?> userHistory(String email, Integer month, Integer year, Integer start, Integer limit);
 
     void forgotPassword(InputForgotPassword inputForgotPassword) ;
 

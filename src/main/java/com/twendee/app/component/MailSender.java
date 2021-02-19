@@ -31,7 +31,8 @@ public class MailSender {
         mimeMessageHelper.setTo(to);
         mimeMessageHelper.setReplyTo(from, from);
         mimeMessageHelper.setSubject(subject);
-        mimeMessageHelper.setText(body,true);
+        //mimeMessageHelper.setText(body,true);
+        mimeMailMessage.setContent(body,"text/html; charset=utf-8");
 
         javaMailSender.send(mimeMailMessage);
     }catch (Exception e){

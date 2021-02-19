@@ -54,6 +54,15 @@ public class AdminController {
         return adminService.getListTimekeepingByDate(page, limit, date);
     }
 
+    @GetMapping(value = "/time-keepings", params = "month")
+    public List<TimeKeepingDTO> getListTimekeepingByMonth
+            (@RequestParam Integer month,
+             @RequestParam Integer year,
+             @RequestParam(required = false) Integer page,
+             @RequestParam(required = false) Integer limit) {
+        return adminService.getListTimekeepingByMonth(page, limit, month, year);
+    }
+
     //api tạo ra timeKeeping theo ngày để test
     //nhập vào ngày dạng long (millisecond)
     //test xong xóa đoạn code này đi
