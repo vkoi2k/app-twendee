@@ -59,8 +59,8 @@ public class UserController {
         return userService.userHistory(historyInput, start, limit);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<?> updateProfile(@RequestParam Integer id,
+    @PostMapping("/update/{id}")
+    public ResponseEntity<?> updateProfile(@PathVariable Integer id,
                                          @RequestBody InputProfileDTO inputProfileDTO){
         return userService.updateProfile(inputProfileDTO, id);
     }
