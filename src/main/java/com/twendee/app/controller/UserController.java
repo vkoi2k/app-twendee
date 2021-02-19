@@ -3,27 +3,12 @@ package com.twendee.app.controller;
 
 import com.twendee.app.config.JwtTokenProvider;
 import com.twendee.app.model.dto.*;
-
-import com.twendee.app.model.dto.EmailInput;
-import com.twendee.app.model.dto.HistoryInput;
-import com.twendee.app.model.dto.Message;
-import com.twendee.app.model.dto.TimeKeepingDTO;
-import com.twendee.app.model.entity.User;
-import com.twendee.app.reponsitory.UserRepository;
-
 import com.twendee.app.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
@@ -40,12 +25,12 @@ public class UserController {
 
 
     @PostMapping("/checkin")
-    public Message checkIn(@RequestBody EmailInput email){
+    public Message checkIn(@RequestBody EmailInput email) {
         return userService.userCheckin(email.getEmail());
     }
 
     @PostMapping("/checkout")
-    public Message checkOut(@RequestBody EmailInput email){
+    public Message checkOut(@RequestBody EmailInput email) {
         return userService.userCheckout(email.getEmail());
     }
 
@@ -53,11 +38,14 @@ public class UserController {
     //Lịch sử điểm danh theo tháng
     //start là số page (trang) bắt đầu từ 0
     @PostMapping("/history")
-    public ResponseEntity<?> getHistory(@RequestBody HistoryInput historyInput,
-                                                           @RequestParam(value = "page", required = false) Integer start,
-                                                           @RequestParam(value = "limit", required = false) Integer limit){
-        return userService.userHistory(historyInput, start, limit);
+    public ResponseEntity<?> getHistory(@RequestParam String email,
+                                        @RequestParam(required = false) Integer month,
+                                        @RequestParam(required = false) Integer year,
+                                        @RequestParam(value = "page", required = false) Integer start,
+                                        @RequestParam(value = "limit", required = false) Integer limit) {
+        return userService.userHistory(email, month, year, start, limit);
     }
+
 
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateProfile(@PathVariable Integer id,
@@ -74,14 +62,12 @@ public class UserController {
     }
 
 
-
     @PostMapping("forgotPassword")
-    public ResponseEntity<?> forgotPassword(@RequestBody InputForgotPassword inputForgotPassword){
+    public ResponseEntity<?> forgotPassword(@RequestBody InputForgotPassword inputForgotPassword) {
 
         return  userService.forgotPassword(inputForgotPassword);
 
     }
-
 
 
 }
