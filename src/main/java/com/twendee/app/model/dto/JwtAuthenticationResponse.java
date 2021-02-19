@@ -12,13 +12,13 @@ public class JwtAuthenticationResponse {
 	private String accessToken;
 	private String tokenType = "Bearer";
 	private List<String> role;
-	private User user;
+	private UserDTO user;
 
 	public JwtAuthenticationResponse(String accessToken) {
 		this.accessToken = accessToken;
 	}
 
-	public JwtAuthenticationResponse(String accessToken, List<String> role, User user){
+	public JwtAuthenticationResponse(String accessToken, List<String> role, UserDTO user){
 		this.accessToken = accessToken;
 		this.role = role;
 		this.user = user;

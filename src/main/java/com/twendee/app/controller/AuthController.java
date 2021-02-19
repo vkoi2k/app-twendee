@@ -4,9 +4,12 @@ package com.twendee.app.controller;
 import com.twendee.app.config.JwtTokenProvider;
 import com.twendee.app.model.dto.JwtAuthenticationResponse;
 import com.twendee.app.model.dto.LoginRequest;
+import com.twendee.app.model.dto.UserDTO;
 import com.twendee.app.model.entity.CustomUserDetail;
 import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.UserRepository;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -53,10 +56,14 @@ public class AuthController {
 		System.out.println("Auth"+authentication);
 		Collection<? extends GrantedAuthority> role = authentication.getAuthorities();
 		User user = jwtTokenProvider.getUserFromToken(jwt);
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration()
+				.setMatchingStrategy(MatchingStrategies.STRICT);
+		UserDTO userDTO = modelMapper.map(user, UserDTO.class);
 		List<String> roles = new ArrayList<>();
 		for(GrantedAuthority grantedAuthority : role) {
 			roles.add(grantedAuthority.getAuthority());
 		}
-		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, roles,user));
+		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, roles,userDTO));
 	}
 }
