@@ -204,6 +204,8 @@ public class UserServiceImpl implements UserService {
 
             user.setDob(new Date(inputProfileDTO.getBirthday()));
             user.setEmail(oldUser.getEmail());
+            user.setPosition(oldUser.getPosition());
+            user.setVip(oldUser.isVip());
             UserDTO updatedUserDTO = modelMapper.map(userRepository.save(user), UserDTO.class);
             updatedUserDTO.setBirthday(user.getDob().getTime());
             return ResponseEntity.ok(updatedUserDTO);
