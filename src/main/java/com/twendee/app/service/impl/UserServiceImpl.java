@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
             System.out.println("userID: " + user.get().getUserId());
             SimpleDateFormat DateToString = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date date = new Date();
+            Date date = new Date(new Date().getTime()+7*3600*1000);
             TimeKeeping timeKeeping =
                     timeKeepingRepository.findByUser_UserIdAndDateGreaterThanEqualAndDateLessThanEqual(
                             user.get().getUserId(),
@@ -72,17 +72,18 @@ public class UserServiceImpl implements UserService {
             System.out.println("tk: " + timeKeeping);
             if (timeKeeping != null) {
                 if (timeKeeping.getCheckin() == null) {
-                    timeKeeping.setCheckin(new Date());
+                    timeKeeping.setCheckin(date);
                     timeKeepingRepository.save(timeKeeping);
                     return new Message("Checkin successful");
                 }
                 return new Message("You checked in at: " + timeKeeping.getCheckin().toString());
+            }else{
+                return new Message("Checkin failed");
             }
         } catch (Exception ex) {
             //ex.printStackTrace();
             return new Message("Checkin failed");
         }
-        return new Message("Checkin failed");
     }
 
     @Override
@@ -91,7 +92,7 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.getUserByEmailAndDeletedFalse(email);
             SimpleDateFormat DateToString = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date date = new Date();
+            Date date = new Date(new Date().getTime()+7*3600*1000);
             TimeKeeping timeKeeping =
                     timeKeepingRepository.findByUser_UserIdAndDateGreaterThanEqualAndDateLessThanEqual(
                             user.getUserId(),
@@ -103,18 +104,17 @@ public class UserServiceImpl implements UserService {
                     return new Message("You must checkin before checkout.");
                 } else {
                     if (timeKeeping.getCheckout() == null) {
-                        timeKeeping.setCheckout(new Date());
+                        timeKeeping.setCheckout(date);
                         timeKeepingRepository.save(timeKeeping);
                         return new Message("Checkout successful");
                     }
                     return new Message("You checked out at: " + timeKeeping.getCheckout().toString());
                 }
-            }
+            }else return new Message("Checkout failed");
         } catch (Exception ex) {
             //ex.printStackTrace();
             return new Message("Checkout failed");
         }
-        return new Message("Checkout failed");
     }
 
     @Override

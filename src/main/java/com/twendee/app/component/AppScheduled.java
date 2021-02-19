@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 
-//@Component
+@Component
 public class AppScheduled {
 
     final
@@ -33,12 +34,13 @@ public class AppScheduled {
     }
 
     //tự động tạo các bản ghi timeKeeping cho tất cả nhân viên vào 00:00:00 mỗi ngày
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 17 * * *")
     public void AutoCreatTimekeeping() {
         try {
             SimpleDateFormat DateToString = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date date1=DateToString.parse(DateToString.format(new Date()));
+            Date date2=new Date(new Date().getTime()+7*3600*1000);
+            Date date1=DateToString.parse(DateToString.format(date2));
             //lấy về list user chưa đc tạo timeKeeping cho ngày hôm nay
             List<TimeKeeping> list = timeKeepingRepository.findByDateGreaterThanEqualAndDateLessThanEqual(
                     StringToDate.parse(DateToString.format(date1) + " 00:00:00"),
