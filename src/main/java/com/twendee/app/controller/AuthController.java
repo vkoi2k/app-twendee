@@ -29,18 +29,18 @@ import java.util.List;
 
 @RestController
 public class AuthController {
-	
+
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final UserRepository userRepository;
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
-	
+
 	public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
 		this.authenticationManager = authenticationManager;
 		this.jwtTokenProvider = jwtTokenProvider;
 		this.userRepository = userRepository;
 	}
-	
+
 	@PostMapping(value = "/login")
 	public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 		System.out.println("Auth" + loginRequest.toString());
