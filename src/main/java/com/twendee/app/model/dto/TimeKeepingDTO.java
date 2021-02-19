@@ -14,8 +14,7 @@ import java.util.Date;
 public class TimeKeepingDTO {
     private String username;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date date;
+    private long date;
 
     private long checkin;
 
@@ -31,7 +30,7 @@ public class TimeKeepingDTO {
 
     public TimeKeepingDTO(TimeKeeping timeKeeping) throws ParseException {
         this.username=timeKeeping.getUser().getName();
-        this.date=timeKeeping.getDate();
+        this.date=timeKeeping.getDate().getTime();
         if(timeKeeping.getCheckin()!=null)this.checkin=timeKeeping.getCheckin().getTime();
         if(timeKeeping.getCheckout()!=null)this.checkout=timeKeeping.getCheckout().getTime();
 

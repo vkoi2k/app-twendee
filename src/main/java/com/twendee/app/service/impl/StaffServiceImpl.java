@@ -3,7 +3,9 @@ package com.twendee.app.service.impl;
 import com.twendee.app.model.dto.InputUserDTO;
 import com.twendee.app.model.dto.Message;
 import com.twendee.app.model.dto.UserDTO;
+import com.twendee.app.model.entity.TimeKeeping;
 import com.twendee.app.model.entity.User;
+import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.StaffService;
 import org.modelmapper.ModelMapper;
@@ -29,10 +31,16 @@ import java.util.Optional;
 @Service
 public class StaffServiceImpl implements StaffService {
     private final UserRepository userRepository;
-    @Autowired
+
+    final
     PasswordEncoder passwordEncoder;
-    public StaffServiceImpl(UserRepository userRepository) {
+
+    private final TimeKeepingRepository timeKeepingRepository;
+
+    public StaffServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, TimeKeepingRepository timeKeepingRepository) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.timeKeepingRepository = timeKeepingRepository;
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StaffServiceImpl.class);
@@ -88,8 +96,19 @@ public class StaffServiceImpl implements StaffService {
             user.setRole(false);
             user.setPass(passwordEncoder.encode(inputUserDTO.getPass()));
             user.setDob(new Date(inputUserDTO.getBirthday()));
-            UserDTO newUserDTO = modelMapper.map(userRepository.save(user), UserDTO.class);
+            User newUser=userRepository.save(user);
+            UserDTO newUserDTO = modelMapper.map(newUser, UserDTO.class);
             newUserDTO.setBirthday(user.getDob().getTime());
+
+            //tạo timekeeping ngày hôm nay cho nhân viên mới tạo
+            TimeKeeping timeKeeping=new TimeKeeping();
+            timeKeeping.setUser(newUser);
+            SimpleDateFormat removeTime=new SimpleDateFormat("dd/MM/yyyy");
+            timeKeeping.setDate(
+                    removeTime.parse(removeTime.format(new Date(new Date().getTime()+7*3600*1000)))
+            );
+            timeKeepingRepository.save(timeKeeping);
+
             return ResponseEntity.ok(newUserDTO);
         }catch (DataIntegrityViolationException ex){
             return ResponseEntity.ok(new Message("DUPLICATE_EMAIL"));

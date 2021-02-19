@@ -59,7 +59,7 @@ public class AdminServiceImpl implements AdminService {
             } else if (optionalRequest.get().getAbsenceOutside() != null) {
                 Request request = optionalRequest.get();
                 //set request vào cho timekeeping
-                absencdOutside(request);
+                absentOutside(request);
                 //chuyển trạng thái request thành đã được chấp nhận
                 request.setAccept(true);
                 requestRepository.save(request);
@@ -161,10 +161,10 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-    public void absencdOutside(Request request) {
+    public void absentOutside(Request request) {
         Date startDate = request.getAbsenceOutside().getStartDate();
         Date endDate = request.getAbsenceOutside().getEndDate();
-        if(!removeTime(endDate).after(new Date())){   //tại thời điểm duyệt chứa chỉ các ngày xin phép trong quá khứ
+        if(!removeTime(endDate).after(new Date(new Date().getTime()+7*3600*1000))){   //tại thời điểm duyệt chứa chỉ các ngày xin phép trong quá khứ
             List<TimeKeeping> timeKeepingList = timeKeepingRepository
                     .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
                             (request.getUser(),
@@ -175,7 +175,7 @@ public class AdminServiceImpl implements AdminService {
                 timeKeepingRepository.save(timeKeeping);
             }
         }
-        else if (removeTime(startDate).before(new Date())) {       //thời gian duyệt request chứa ngày xin phép trong quá khứ và tương lai
+        else if (removeTime(startDate).before(new Date(new Date().getTime()+7*3600*1000))) {       //thời gian duyệt request chứa ngày xin phép trong quá khứ và tương lai
             //set Request cho những ngày đã qua - hôm nay
             List<TimeKeeping> timeKeepingList = timeKeepingRepository
                     .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
@@ -189,7 +189,7 @@ public class AdminServiceImpl implements AdminService {
 
             //set Request cho ngày mai - enddate
             Date date;
-            for (date = removeTime(new Date(new Date().getTime() + 86_400_000)); !date.after(removeTime(endDate));
+            for (date = removeTime(new Date(new Date().getTime() + 86_400_000 +7*3600*1000)); !date.after(removeTime(endDate));
                  date.setTime(date.getTime() + 86_400_000)) {
                 TimeKeeping timeKeeping = new TimeKeeping();
                 timeKeeping.setUser(request.getUser());
@@ -269,7 +269,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<TimeKeepingDTO> getListTimekeepingByDate(Integer page, Integer limit, long dateInt) {
         try {
-            Date date = new Date(dateInt);
+            Date date = new Date(dateInt+7*3600*1000);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             List<TimeKeeping> timeKeepingList;
             if (page != null && limit != null) {
@@ -300,6 +300,7 @@ public class AdminServiceImpl implements AdminService {
             SimpleDateFormat DateToString = new SimpleDateFormat("01/MM/yyyy");
             SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date(new Date().getTime()+7*3600*1000));
             cal.set(Calendar.MONTH, month - 1);
             cal.set(Calendar.YEAR, year);
             System.out.println("cal chua cong: " + DateToString.format(cal.getTime()) + " 00:00:00");

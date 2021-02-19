@@ -63,11 +63,11 @@ public class AdminController {
     UserRepository userRepository;
     @GetMapping(value = "/create-timekeepings", params = "date")
     public ResponseEntity<Message> createTimeKeepings(@RequestParam long date){
-        Date date1=new Date(date);
+        Date date2=new Date(date+7*3600*1000);
         try {
             SimpleDateFormat DateToString = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-
+            Date date1=DateToString.parse(DateToString.format(date2));
             //lấy về list user chưa đc tạo timeKeeping cho ngày hôm nay
             List<TimeKeeping> list = timeKeepingRepository.findByDateGreaterThanEqualAndDateLessThanEqual(
                     StringToDate.parse(DateToString.format(date1) + " 00:00:00"),
@@ -92,6 +92,11 @@ public class AdminController {
             e.printStackTrace();
             return ResponseEntity.ok(new Message("create timekeeping failed"));
         }
+    }
+    @GetMapping("/test-time")
+    public String testTime(){
+        SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return StringToDate.format(new Date());
     }
 
 }
