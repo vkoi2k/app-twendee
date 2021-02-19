@@ -182,22 +182,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void forgotPassword(InputForgotPassword inputForgotPassword) {
+    public ResponseEntity<?> forgotPassword(InputForgotPassword inputForgotPassword) {
         String email = inputForgotPassword.getEmail();
         User userCurrent = userRepository.getUserByEmail(email);
-        Integer id = userCurrent.getUserId();
-        Optional<User> user = userRepository.findById(id);
-        if (!user.isPresent()) {
+
+
+        if (userCurrent == null) {
+            return ResponseEntity.ok(new Message("email not found"));
 
         }
-        String newPass = RandomStringUtils.randomAlphanumeric(6);
-        user.get().setPass(passwordEncoder.encode(newPass));
-        userRepository.save(user.get());
-        mailSender.send(user.get().getEmail(),
-                "Reset password ",
-                "New password: " + newPass
-        );
+        else {
+            Integer id = userCurrent.getUserId();
+            Optional<User> user = userRepository.findById(id);
+            String newPass = RandomStringUtils.randomAlphanumeric(6);
+            user.get().setPass(passwordEncoder.encode(newPass));
+            userRepository.save(user.get());
+            mailSender.send(user.get().getEmail(),
+                    "Reset password ",
+                    "New password: " + newPass
+            );
 
+            return ResponseEntity.ok(new Message("successful"));
+        }
     }
 
     @Override
@@ -212,10 +218,17 @@ public class UserServiceImpl implements UserService {
             user.setRole(oldUser.isRole());
            // user.setPass(oldUser.getPass());
             String newPass = user.getPass();
-            user.setPass(passwordEncoder.encode(newPass));
+            if(newPass.equals(oldUser.getPass())){
+                user.setPass(oldUser.getPass());
+            }
+            else {
+                user.setPass(passwordEncoder.encode(newPass));
+            }
 
             user.setDob(new Date(inputProfileDTO.getBirthday()));
             user.setEmail(oldUser.getEmail());
+            user.setPosition(oldUser.getPosition());
+            user.setVip(oldUser.isVip());
             UserDTO updatedUserDTO = modelMapper.map(userRepository.save(user), UserDTO.class);
             updatedUserDTO.setBirthday(user.getDob().getTime());
             return ResponseEntity.ok(updatedUserDTO);

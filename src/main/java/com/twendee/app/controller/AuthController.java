@@ -4,9 +4,12 @@ package com.twendee.app.controller;
 import com.twendee.app.config.JwtTokenProvider;
 import com.twendee.app.model.dto.JwtAuthenticationResponse;
 import com.twendee.app.model.dto.LoginRequest;
+import com.twendee.app.model.dto.UserDTO;
 import com.twendee.app.model.entity.CustomUserDetail;
 import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.UserRepository;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +29,18 @@ import java.util.List;
 
 @RestController
 public class AuthController {
-	
+
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final UserRepository userRepository;
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
-	
+
 	public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
 		this.authenticationManager = authenticationManager;
 		this.jwtTokenProvider = jwtTokenProvider;
 		this.userRepository = userRepository;
 	}
-	
+
 	@PostMapping(value = "/login")
 	public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 		System.out.println("Auth" + loginRequest.toString());
@@ -53,10 +56,14 @@ public class AuthController {
 		System.out.println("Auth"+authentication);
 		Collection<? extends GrantedAuthority> role = authentication.getAuthorities();
 		User user = jwtTokenProvider.getUserFromToken(jwt);
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration()
+				.setMatchingStrategy(MatchingStrategies.STRICT);
+		UserDTO userDTO = modelMapper.map(user, UserDTO.class);
 		List<String> roles = new ArrayList<>();
 		for(GrantedAuthority grantedAuthority : role) {
 			roles.add(grantedAuthority.getAuthority());
 		}
-		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, roles,user));
+		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, roles,userDTO));
 	}
 }

@@ -16,7 +16,5 @@ public class InputProfileDTO {
     private String address;
     private String phone;
     private String avatar;
-    private boolean isVip;
-    private String position;
     private boolean gender;
 }

@@ -46,9 +46,10 @@ public class UserController {
         return userService.userHistory(email, month, year, start, limit);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<?> updateProfile(@RequestParam Integer id,
-                                           @RequestBody InputProfileDTO inputProfileDTO) {
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<?> updateProfile(@PathVariable Integer id,
+                                         @RequestBody InputProfileDTO inputProfileDTO){
         return userService.updateProfile(inputProfileDTO, id);
     }
 
@@ -64,8 +65,8 @@ public class UserController {
     @PostMapping("forgotPassword")
     public ResponseEntity<?> forgotPassword(@RequestBody InputForgotPassword inputForgotPassword) {
 
-        userService.forgotPassword(inputForgotPassword);
-        return ResponseEntity.ok("Oke");
+        return  userService.forgotPassword(inputForgotPassword);
+
     }
 
 
