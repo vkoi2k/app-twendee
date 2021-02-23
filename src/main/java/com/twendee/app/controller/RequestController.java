@@ -21,16 +21,16 @@ public class RequestController {
 
     @GetMapping("/requests")
     public List<RequestDTO> findByIsAcceptAndType(@RequestParam(value = "page", required = false) Integer page,
-                                    @RequestParam(value = "limit", required = false) Integer limit,
-                                    @RequestParam(value = "isAccepted", required = false) Boolean isAccepted,
-                                    @RequestParam(value = "type", required = false) String type) {
+                                                  @RequestParam(value = "limit", required = false) Integer limit,
+                                                  @RequestParam(value = "isAccepted", required = false) Boolean isAccepted,
+                                                  @RequestParam(value = "type", required = false) String type) {
         if (isAccepted != null && type == null) {
             if (isAccepted == true) {
                 return requestService.findByIsAcceptTrue(page, limit);
             } else {
                 return requestService.findByIsAcceptFalse(page, limit);
             }
-        } else if ( type != null && isAccepted == null){
+        } else if (type != null && isAccepted == null) {
             return requestService.findByType(type, page, limit);
         } else if (type != null && isAccepted != null) {
             return requestService.findByIsAcceptAndType(isAccepted, type, page, limit);
@@ -66,12 +66,19 @@ public class RequestController {
 //
 //    }
 
-    @GetMapping(value = "/requests/time", params = "date")
+    @GetMapping(value = "/requests/time")
     public List<RequestDTO> getListRequestByDate
-            (@RequestParam long date,
+            (@RequestParam(value = "dateMin") Long dateMin,
+             @RequestParam(value = "dateMax", required = false) Long dateMax,
              @RequestParam(required = false) Integer page,
              @RequestParam(required = false) Integer limit) {
-        return requestService.getListRequestByDate(page, limit, date);
+       if (dateMax == null){
+           return requestService.getListRequestByDate(page, limit, dateMin, dateMin);
+       }
+       else{
+           return requestService.getListRequestByDate(page, limit, dateMin, dateMax);
+       }
+
     }
 
 

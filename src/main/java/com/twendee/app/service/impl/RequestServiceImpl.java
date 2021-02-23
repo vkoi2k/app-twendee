@@ -288,21 +288,24 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<RequestDTO> getListRequestByDate(Integer page, Integer limit, long dateInt) {
+    public List<RequestDTO> getListRequestByDate(Integer page, Integer limit, long dateIntMin, long dateIntMax) {
         try {
-            Date date = new Date(dateInt);
+            Date dateMin = new Date(dateIntMin);
+            Date dateMax = new Date(dateIntMax);
+
+
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             List<Request> requestList;
             if (page != null && limit != null) {
                 Page<Request> requestPage = requestRepository.findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqual
-                        (simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
-                                simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59"),
+                        (simpleDateFormat.parse(simpleDateFormat.format(dateMin) + " 00:00:00"),
+                                simpleDateFormat.parse(simpleDateFormat.format(dateMax) + " 23:59:59"),
                                 PageRequest.of(page, limit));
                 requestList = requestPage.toList();
             } else {
                 requestList = requestRepository.findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqual
-                        (simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
-                                simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59"));
+                        (simpleDateFormat.parse(simpleDateFormat.format(dateMin) + " 00:00:00"),
+                                simpleDateFormat.parse(simpleDateFormat.format(dateMax) + " 23:59:59"));
             }
             List<RequestDTO> requestDTOList = new ArrayList<>();
             for (Request request : requestList) {
