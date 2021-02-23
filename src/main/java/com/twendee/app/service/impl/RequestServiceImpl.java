@@ -69,7 +69,12 @@ public class RequestServiceImpl implements RequestService {
                 requestDTO.setDate(request.getCheckoutSupport().getDate().getTime());
             }
             requestDTO.setTimeRequest(request.getTimeRequest().getTime());
-            requestDTO.setEmail(request.getUser().getEmail());
+            if(request.getUser() != null) {
+                requestDTO.setEmail(request.getUser().getEmail());
+
+            } else {
+                System.out.println("Request has null user:" + request.getRequestId());
+            }
             requestDTOS.add(requestDTO);
         }
         return requestDTOS;
