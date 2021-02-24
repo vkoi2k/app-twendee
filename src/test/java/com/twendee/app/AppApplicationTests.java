@@ -38,12 +38,13 @@ class AppApplicationTests {
     void testDayOfWeek() {
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = simpleDateFormat.parse("14/02/2021");
+            Date date = simpleDateFormat.parse("02/02/2021");
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
+            cal.set(Calendar.DAY_OF_MONTH,1);
             System.out.println(cal.toString());
-            System.out.println("ngay: "+cal.getTime().toString());
-            System.out.println("thu: " + cal.get(Calendar.DAY_OF_WEEK));
+            System.out.println("ngay: "+simpleDateFormat.format(cal.getTime()));
+            System.out.println("thu: " + cal.get(Calendar.DAY_OF_MONTH));
             ;
         }catch (Exception ex){
             ex.printStackTrace();
