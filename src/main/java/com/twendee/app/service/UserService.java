@@ -1,11 +1,10 @@
 package com.twendee.app.service;
 
-import com.twendee.app.model.dto.*;
-import com.twendee.app.model.entity.User;
-import io.swagger.models.auth.In;
+import com.twendee.app.model.dto.InputForgotPassword;
+import com.twendee.app.model.dto.InputProfileDTO;
+import com.twendee.app.model.dto.InputToken;
+import com.twendee.app.model.dto.Message;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 public interface UserService {
     Message userCheckin(String email);

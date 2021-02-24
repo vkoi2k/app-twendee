@@ -1,13 +1,11 @@
 package com.twendee.app.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.twendee.app.model.entity.TimeKeeping;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -56,14 +54,20 @@ public class TimeKeepingDTO {
 
         if(timeKeeping.getRequest() !=null){
             if(timeKeeping.getRequest().getLateEarly()!=null){
-                this.note="Xin đi muộn/về sớm";
+                String ghiChu="";
+                if(timeKeeping.getRequest().getLateEarly().getTimeLate()>0)
+                    ghiChu=ghiChu+"Xin vào muộn: "+timeKeeping.getRequest().getLateEarly().getTimeLate()+" phút. ";
+                if(timeKeeping.getRequest().getLateEarly().getTimeEarly()>0)
+                    ghiChu=ghiChu+"Xin về sớm: "+timeKeeping.getRequest().getLateEarly().getTimeEarly()+" phút. ";
+                this.note=ghiChu;
             }else if(timeKeeping.getRequest().getAbsenceOutside()!=null){
                 if(timeKeeping.getRequest().getAbsenceOutside().isType())
                     this.note="Xin nghỉ";
-                else this.note="Xin đi outside";
-            }else if(timeKeeping.getRequest().getCheckoutSupport()!=null){
-                    this.note="Checkout bù";
+                else this.note="Xin đi on side";
             }
+//            else if(timeKeeping.getRequest().getCheckoutSupport()!=null){
+//                    this.note="Checkout bù";
+//            }
         }
     }
 }
