@@ -1,5 +1,6 @@
 package com.twendee.app.service;
 
+import com.twendee.app.model.dto.Message;
 import com.twendee.app.model.dto.RequestDTO;
 
 import org.springframework.http.ResponseEntity;
@@ -21,4 +22,6 @@ public interface RequestService {
     List<RequestDTO> findByIsAcceptAndType(Boolean isAccept , String type , Integer page , Integer limit);
 
     List<RequestDTO> getListRequestByDate(Integer page, Integer limit, long dateIntMin, long dateIntMax);
+
+    Message delete(Integer id);
 }

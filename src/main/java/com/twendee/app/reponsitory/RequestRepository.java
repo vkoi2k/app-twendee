@@ -13,13 +13,13 @@ import java.util.List;
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Integer> {
 
-    Page<Request> findByIsAcceptTrue(Pageable pageable);
+    Page<Request> findByIsAcceptTrueAndDeletedFalse(Pageable pageable);
 
-    List<Request> findByIsAcceptTrue(Sort sort);
+    List<Request> findByIsAcceptTrueAndDeletedFalse(Sort sort);
 
-    Page<Request> findByIsAcceptFalse(Pageable pageable);
+    Page<Request> findByIsAcceptFalseAndDeletedFalse(Pageable pageable);
 
-    List<Request> findByIsAcceptFalse(Sort sort);
+    List<Request> findByIsAcceptFalseAndDeletedFalse(Sort sort);
 
     Page<Request> findByLateEarlyIsNotNull(Pageable pageable);
 
@@ -40,6 +40,12 @@ public interface RequestRepository extends JpaRepository<Request, Integer> {
     Page<Request> findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqual(
             Date minDate, Date maxDate, Pageable pageable
     );
+
+    Request findByRequestIdAndDeletedFalse(Integer requestId);
+
+    Page<Request> findAllByDeletedFalse(Pageable pageable);
+
+    List<Request> findAllByDeletedFalse(Sort sort);
 
 
 }

@@ -5,6 +5,7 @@ import com.twendee.app.model.dto.RequestDTO;
 import com.twendee.app.model.dto.TimeKeepingDTO;
 import com.twendee.app.model.entity.Request;
 import com.twendee.app.model.entity.TimeKeeping;
+import com.twendee.app.model.entity.User;
 import com.twendee.app.reponsitory.RequestRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.RequestService;
@@ -38,10 +39,10 @@ public class RequestServiceImpl implements RequestService {
         List<Request> requests;
         if (page != null && limit != null) {
             Page<Request> pages = requestRepository.
-                    findAll(PageRequest.of(page, limit, Sort.by("requestId")));
+                    findAllByDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
             requests = pages.toList();
         } else {
-            requests = requestRepository.findAll(Sort.by("requestId"));
+            requests = requestRepository.findAllByDeletedFalse(Sort.by("requestId"));
         }
         List<RequestDTO> requestDTOS = new ArrayList<>();
         ModelMapper modelMapper = new ModelMapper();
@@ -125,10 +126,10 @@ public class RequestServiceImpl implements RequestService {
         List<Request> requests;
         if (page != null && limit != null) {
             Page<Request> pages = requestRepository.
-                    findByIsAcceptTrue(PageRequest.of(page, limit, Sort.by("requestId")));
+                    findByIsAcceptTrueAndDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
             requests = pages.toList();
         } else {
-            requests = requestRepository.findByIsAcceptTrue(Sort.by("requestId"));
+            requests = requestRepository.findByIsAcceptTrueAndDeletedFalse(Sort.by("requestId"));
         }
         List<RequestDTO> requestDTOS = new ArrayList<>();
         for (Request request : requests) {
@@ -144,10 +145,10 @@ public class RequestServiceImpl implements RequestService {
         List<Request> requests;
         if (page != null && limit != null) {
             Page<Request> pages = requestRepository.
-                    findByIsAcceptFalse(PageRequest.of(page, limit, Sort.by("requestId")));
+                    findByIsAcceptFalseAndDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
             requests = pages.toList();
         } else {
-            requests = requestRepository.findByIsAcceptFalse(Sort.by("requestId"));
+            requests = requestRepository.findByIsAcceptFalseAndDeletedFalse(Sort.by("requestId"));
         }
 
         List<RequestDTO> requestDTOS = new ArrayList<>();
@@ -164,10 +165,10 @@ public class RequestServiceImpl implements RequestService {
         List<Request> requests;
         if (page != null && limit != null) {
             Page<Request> pages = requestRepository.
-                    findAll(PageRequest.of(page, limit, Sort.by("requestId")));
+                    findAllByDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
             requests = pages.toList();
         } else {
-            requests = requestRepository.findAll(Sort.by("requestId"));
+            requests = requestRepository.findAllByDeletedFalse(Sort.by("requestId"));
         }
         List<RequestDTO> requestDTOS = new ArrayList<>();
         ModelMapper modelMapper = new ModelMapper();
@@ -225,19 +226,19 @@ public class RequestServiceImpl implements RequestService {
         if (page != null && limit != null) {
             if (isAccept == true) {
                 Page<Request> pages = requestRepository.
-                        findByIsAcceptTrue(PageRequest.of(page, limit, Sort.by("requestId")));
+                        findByIsAcceptTrueAndDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
                 requests = pages.toList();
             } else {
                 Page<Request> pages = requestRepository.
-                        findByIsAcceptFalse(PageRequest.of(page, limit, Sort.by("requestId")));
+                        findByIsAcceptFalseAndDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
                 requests = pages.toList();
             }
         } else {
             if (isAccept == true){
-                requests = requestRepository.findByIsAcceptTrue(Sort.by("requestId"));
+                requests = requestRepository.findByIsAcceptTrueAndDeletedFalse(Sort.by("requestId"));
             }
             else {
-                requests = requestRepository.findByIsAcceptFalse(Sort.by("requestId"));
+                requests = requestRepository.findByIsAcceptFalseAndDeletedFalse(Sort.by("requestId"));
             }
 
         }
@@ -321,6 +322,23 @@ public class RequestServiceImpl implements RequestService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public Message delete(Integer id) {
+        try {
+            Request optionalRequest = requestRepository.findByRequestIdAndDeletedFalse(id);
+            if(optionalRequest !=null){
+                optionalRequest.setDeleted(true);
+                requestRepository.save(optionalRequest);
+                return new Message("Delete successfully, requestId: " + id);
+            }else{
+                return new Message("requestId: " + id+" is not found.");
+            }
+        } catch (Exception e) {
+            return new Message("Delete failed.");
+        }
+
     }
 
 

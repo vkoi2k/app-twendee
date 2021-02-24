@@ -1,5 +1,6 @@
 package com.twendee.app.controller;
 
+import com.twendee.app.model.dto.Message;
 import com.twendee.app.model.dto.RequestDTO;
 import com.twendee.app.model.entity.Request;
 import com.twendee.app.service.RequestService;
@@ -79,6 +80,11 @@ public class RequestController {
            return requestService.getListRequestByDate(page, limit, dateMin, dateMax);
        }
 
+    }
+
+    @DeleteMapping("/requests/{id}")
+    public Message delete(@PathVariable Integer id){
+        return requestService.delete(id);
     }
 
 
