@@ -303,22 +303,24 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<TimeKeepingDTO> getListTimekeepingByMonth(Integer page, Integer limit, Integer month, Integer year) {
         try {
-            SimpleDateFormat DateToString = new SimpleDateFormat("01/MM/yyyy");
+            SimpleDateFormat DateToString = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.DAY_OF_MONTH,5);
+            cal.set(Calendar.DAY_OF_MONTH,1);
             cal.set(Calendar.MONTH, month - 1);
             cal.set(Calendar.YEAR, year);
             System.out.println("cal chua cong: " + DateToString.format(cal.getTime()) + " 00:00:00");
             Date date = cal.getTime();
             cal.add(Calendar.MONTH, 1);
             System.out.println("cal: " + DateToString.format(cal.getTime()) + " 00:00:00");
+            Date endDate=
+                    new Date(new Date().getTime() +7*3600*1000).after(cal.getTime())?cal.getTime():new Date(new Date().getTime() +31*3600*1000);
             List<TimeKeeping> timeKeepingList;
             if (page != null && limit != null) {
                 Page<TimeKeeping> pages = timeKeepingRepository
                         .findByDateGreaterThanEqualAndDateLessThan(
                                 StringToDate.parse(DateToString.format(date) + " 00:00:00"),
-                                StringToDate.parse(DateToString.format(cal.getTime()) + " 00:00:00"),
+                                StringToDate.parse(DateToString.format(endDate) + " 00:00:00"),
                                 PageRequest.of(page, limit, Sort.by("user.name").ascending())
                         );
                 timeKeepingList = pages.toList();
@@ -326,7 +328,7 @@ public class AdminServiceImpl implements AdminService {
                 timeKeepingList = timeKeepingRepository
                         .findByDateGreaterThanEqualAndDateLessThan(
                                 StringToDate.parse(DateToString.format(date) + " 00:00:00"),
-                                StringToDate.parse(DateToString.format(cal.getTime()) + " 00:00:00"),
+                                StringToDate.parse(DateToString.format(endDate) + " 00:00:00"),
                                 Sort.by("user.name").ascending()
                         );
             }

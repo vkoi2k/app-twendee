@@ -119,23 +119,25 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepository.getUserByEmailAndDeletedFalse(email);
             List<TimeKeeping> timeKeepingList;
-            SimpleDateFormat DateToString = new SimpleDateFormat("01/MM/yyyy");
+            SimpleDateFormat DateToString = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             if(month !=null && year !=null){
                 Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.DAY_OF_MONTH,5);
+                cal.set(Calendar.DAY_OF_MONTH,1);
                 cal.set(Calendar.MONTH, month - 1);
                 cal.set(Calendar.YEAR, year);
                 System.out.println("cal chua cong: " + DateToString.format(cal.getTime()) + " 00:00:00");
                 Date date = cal.getTime();
                 cal.add(Calendar.MONTH, 1);
                 System.out.println("cal: " + DateToString.format(cal.getTime()) + " 00:00:00");
+                Date endDate=
+                        new Date(new Date().getTime() +7*3600*1000).after(cal.getTime())?cal.getTime():new Date(new Date().getTime() +31*3600*1000);
                 if (start != null && limit != null) {
                     Page<TimeKeeping> pages = timeKeepingRepository
                             .findByUserAndDateGreaterThanEqualAndDateLessThan(
                                     user,
                                     StringToDate.parse(DateToString.format(date) + " 00:00:00"),
-                                    StringToDate.parse(DateToString.format(cal.getTime()) + " 00:00:00"),
+                                    StringToDate.parse(DateToString.format(endDate) + " 00:00:00"),
                                     PageRequest.of(start, limit, Sort.by("date").ascending())
                             );
                     timeKeepingList = pages.toList();
@@ -144,22 +146,24 @@ public class UserServiceImpl implements UserService {
                             .findByUserAndDateGreaterThanEqualAndDateLessThan(
                                     user,
                                     StringToDate.parse(DateToString.format(date) + " 00:00:00"),
-                                    StringToDate.parse(DateToString.format(cal.getTime()) + " 00:00:00"),
+                                    StringToDate.parse(DateToString.format(endDate) + " 00:00:00"),
                                     Sort.by("date").ascending()
                             );
                 }
             }else{
                 if (start != null && limit != null) {
                     Page<TimeKeeping> pages = timeKeepingRepository
-                            .findByUser(
+                            .findByUserAndDateLessThanEqual(
                                     user,
+                                    new Date(new Date().getTime() +7*3600*1000),
                                     PageRequest.of(start, limit, Sort.by("date").ascending())
                             );
                     timeKeepingList = pages.toList();
                 } else {
                     timeKeepingList = timeKeepingRepository
-                            .findByUser(
+                            .findByUserAndDateLessThanEqual(
                                     user,
+                                    new Date(new Date().getTime() +7*3600*1000),
                                     Sort.by("date").ascending()
                             );
                 }
