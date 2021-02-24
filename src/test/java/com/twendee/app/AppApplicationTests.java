@@ -15,10 +15,7 @@ import org.springframework.data.domain.Sort;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @SpringBootTest
 class AppApplicationTests {
@@ -38,37 +35,18 @@ class AppApplicationTests {
     RequestRepository requestRepository;
 
     @Test
-    void autoCreatTimeKeeping() {
+    void testDayOfWeek() {
         try {
-            SimpleDateFormat DateToString = new SimpleDateFormat("dd/MM/yyyy");
-            SimpleDateFormat StringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date date = new Date();
-            System.out.println(StringToDate.parse(DateToString.format(date) + " 00:00:00").toString());
-            System.out.println(StringToDate.parse(DateToString.format(date) + " 23:59:59").toString());
-            //lấy về list user chưa đc tạo timeKeeping cho ngày hôm nay
-            List<TimeKeeping> list = timeKeepingRepository.findByDateGreaterThanEqualAndDateLessThanEqual(
-                    StringToDate.parse(DateToString.format(date) + " 00:00:00"),
-                    StringToDate.parse(DateToString.format(date) + " 23:59:59")
-            );
-            List<Integer> userIds = new ArrayList<>();
-            for (TimeKeeping tk : list) {
-                System.out.println("tk: " + tk.getUser().getUserId());
-                userIds.add(tk.getUser().getUserId());
-            }
-            List<User> users;
-            if(userIds.size()==0){
-                users=userRepository.findByDeletedFalse(Sort.by("userId"));
-            }else users = userRepository.findByUserIdNotInAndDeletedFalse(userIds);
-
-            for (User user : users) {
-                System.out.println("id not in: "+user.getUserId());
-                TimeKeeping timeKeeping = new TimeKeeping();
-                timeKeeping.setUser(user);
-                timeKeeping.setDate(new Date());
-                timeKeepingRepository.save(timeKeeping);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = simpleDateFormat.parse("14/02/2021");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            System.out.println(cal.toString());
+            System.out.println("ngay: "+cal.getTime().toString());
+            System.out.println("thu: " + cal.get(Calendar.DAY_OF_WEEK));
+            ;
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 

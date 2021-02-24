@@ -2,11 +2,14 @@ package com.twendee.app.service.impl;
 
 import com.twendee.app.component.MailSender;
 import com.twendee.app.model.dto.TimeKeepingDTO;
+import com.twendee.app.model.entity.LateEarly;
 import com.twendee.app.model.entity.Request;
 import com.twendee.app.model.entity.TimeKeeping;
+import com.twendee.app.reponsitory.LateEarlyRepository;
 import com.twendee.app.reponsitory.RequestRepository;
 import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.service.AdminService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,22 +31,27 @@ public class AdminServiceImpl implements AdminService {
     final
     MailSender mailSender;
 
-    public AdminServiceImpl(RequestRepository requestRepository, TimeKeepingRepository timeKeepingRepository, MailSender mailSender) {
+    final
+    LateEarlyRepository lateEarlyRepository;
+
+    public AdminServiceImpl(RequestRepository requestRepository, TimeKeepingRepository timeKeepingRepository, MailSender mailSender, LateEarlyRepository lateEarlyRepository) {
         this.requestRepository = requestRepository;
         this.timeKeepingRepository = timeKeepingRepository;
         this.mailSender = mailSender;
+        this.lateEarlyRepository = lateEarlyRepository;
     }
 
 
     @Override
-    public boolean acceptRequest(Integer requestId) {
+    public String acceptRequest(Integer requestId) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Optional<Request> optionalRequest = requestRepository.findById(requestId);
         if (optionalRequest.isPresent()) {
-            if (optionalRequest.get().getLateEarly() != null) {
-                Request request = optionalRequest.get();
+            Request request = optionalRequest.get();
+            if(request.getIsAccept()!=null) return "this_request_has_been_processed";
+            if (request.getLateEarly() != null) {
                 //set request vào cho timekeeping
-                if(!lateEarly(request)) return false;
+                if(!lateEarly(request)) return "accept_false";
                 //chuyển trạng thái request thành đã được chấp nhận
                 request.setAccept(true);
                 requestRepository.save(request);
@@ -52,14 +60,13 @@ public class AdminServiceImpl implements AdminService {
                         "Chấp thuận xin đi muộn/về sớm ngày: "
                                 + simpleDateFormat.format(request.getLateEarly().getDate()),
                         "<h2>Xin đến muộn/về sớm ngày: " + simpleDateFormat.format(request.getLateEarly().getDate())+"</h2>"
-                                + "<br/> Người gửi yêu cầu: " + request.getUser().getName()
+                                + " Người gửi yêu cầu: " + request.getUser().getName()
                                 + "<br/> Ngày gửi yêu cầu: " + simpleDateFormat.format(request.getTimeRequest())
                                 + "<br/> Lý do: " + request.getReason()
                                 + "<br/> Thông báo: yêu cầu đã <b style=\"color:green\">được chấp thuận</b>.");
-            } else if (optionalRequest.get().getAbsenceOutside() != null) {
-                Request request = optionalRequest.get();
+            } else if (request.getAbsenceOutside() != null) {
                 //set request vào cho timekeeping
-                if(!absentOutside(request)) return false;
+                if(!absentOutside(request)) return "accept_false";
                 //chuyển trạng thái request thành đã được chấp nhận
                 request.setAccept(true);
                 requestRepository.save(request);
@@ -69,14 +76,14 @@ public class AdminServiceImpl implements AdminService {
                                 + simpleDateFormat.format(request.getAbsenceOutside().getStartDate()),
                         "<h2>Xin nghỉ/onside từ ngày: " + simpleDateFormat.format(request.getAbsenceOutside().getStartDate())
                                 + " đến ngày " + simpleDateFormat.format(request.getAbsenceOutside().getEndDate())+"</h2>"
-                                + "<br/> Người gửi: " + request.getUser().getName()
+                                + " Người gửi: " + request.getUser().getName()
                                 + "<br/> Ngày gửi: " + simpleDateFormat.format(request.getTimeRequest())
                                 + "<br/> Lý do: " + request.getReason()
                                 + "<br/> Thông báo: yêu cầu đã <b style=\"color:green\">được chấp thuận<b/>.");
-            } else if (optionalRequest.get().getCheckoutSupport() != null) {
-                Request request = optionalRequest.get();
+            } else if (request.getCheckoutSupport() != null) {
                 //set request vào cho timekeeping
-                if(!checkoutSupport(request)) return false;
+                String checkout=checkoutSupport(request);
+                if(!checkout.equals("accept_successfully")) return checkout;
                 //chuyển trạng thái request thành đã được chấp nhận
                 request.setAccept(true);
                 requestRepository.save(request);
@@ -85,26 +92,28 @@ public class AdminServiceImpl implements AdminService {
                         "Chấp thuận checkout bù ngày: "
                                 + simpleDateFormat.format(request.getCheckoutSupport().getDate()),
                         "<h2>Xin checkout bù ngày: " + simpleDateFormat.format(request.getCheckoutSupport().getDate())+"</h2>"
-                                + "<br/> Người gửi: " + request.getUser().getName()
+                                + " Người gửi: " + request.getUser().getName()
                                 + "<br/> Ngày gửi: " + simpleDateFormat.format(request.getTimeRequest())
                                 + "<br/> Lý do: " + request.getReason()
                                 + "<br/> Thông báo: yêu cầu đã <b style=\"color:green\">được chấp thuận</b>.");
             }else{
-                return false;
+                return "accept_false";
             }
-            return true;
+            return "accept_successfully";
         } else {
-            return false;
+            return "accept_false";
         }
     }
 
     @Override
-    public boolean refuseRequest(Integer requestId) {
+    public String refuseRequest(Integer requestId) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Optional<Request> optionalRequest = requestRepository.findById(requestId);
         if (optionalRequest.isPresent()) {
-            if (optionalRequest.get().getLateEarly() != null) {
-                Request request = optionalRequest.get();
+            Request request = optionalRequest.get();
+            if(request.getIsAccept()!=null) return "this_request_has_been_processed";
+            if (request.getLateEarly() != null) {
+
                 //set request vào cho timekeeping
 
                 //chuyển trạng thái request thành false
@@ -115,12 +124,12 @@ public class AdminServiceImpl implements AdminService {
                         "Từ chối xin đi muộn/về sớm ngày: "
                                 + simpleDateFormat.format(request.getLateEarly().getDate()),
                         "<h2>Xin đến muộn/về sớm ngày: " + simpleDateFormat.format(request.getLateEarly().getDate())+"</h2>"
-                                + "<br/> Người gửi yêu cầu: " + request.getUser().getName()
+                                + " Người gửi yêu cầu: " + request.getUser().getName()
                                 + "<br/> Ngày gửi yêu cầu: " + simpleDateFormat.format(request.getTimeRequest())
                                 + "<br/> Lý do: " + request.getReason()
                                 + "<br/> Thông báo: yêu cầu đã <b style=\"color:red\">bị từ chối</b>.");
-            } else if (optionalRequest.get().getAbsenceOutside() != null) {
-                Request request = optionalRequest.get();
+            } else if (request.getAbsenceOutside() != null) {
+
                 //set request vào cho timekeeping
 
                 //chuyển trạng thái request thành đã được chấp nhận
@@ -132,12 +141,12 @@ public class AdminServiceImpl implements AdminService {
                                 + simpleDateFormat.format(request.getAbsenceOutside().getStartDate()),
                         "<h2>Xin nghỉ/onside từ ngày: " + simpleDateFormat.format(request.getAbsenceOutside().getStartDate())
                                 + " đến ngày " + simpleDateFormat.format(request.getAbsenceOutside().getEndDate())+"</h2>"
-                                + "<br/> Người gửi: " + request.getUser().getName()
+                                + " Người gửi: " + request.getUser().getName()
                                 + "<br/> Ngày gửi: " + simpleDateFormat.format(request.getTimeRequest())
                                 + "<br/> Lý do: " + request.getReason()
                                 + "<br/> Thông báo: yêu cầu đã <b style=\"color:red\">bị từ chối<b/>.");
-            } else if (optionalRequest.get().getCheckoutSupport() != null) {
-                Request request = optionalRequest.get();
+            } else if (request.getCheckoutSupport() != null) {
+
                 //set request vào cho timekeeping
 
                 //chuyển trạng thái request thành đã được chấp nhận
@@ -148,16 +157,16 @@ public class AdminServiceImpl implements AdminService {
                         "Từ chối checkout bù ngày: "
                                 + simpleDateFormat.format(request.getCheckoutSupport().getDate()),
                         "<h2>Xin checkout bù ngày: " + simpleDateFormat.format(request.getCheckoutSupport().getDate())+"</h2>"
-                                + "<br/> Người gửi: " + request.getUser().getName()
+                                + " Người gửi: " + request.getUser().getName()
                                 + "<br/> Ngày gửi: " + simpleDateFormat.format(request.getTimeRequest())
                                 + "<br/> Lý do: " + request.getReason()
                                 + "<br/> Thông báo: yêu cầu đã <b style=\"color:red\">bị từ chối</b>.");
             }else{
-                return false;
+                return "accept_false";
             }
-            return true;
+            return "accept_successfully";
         } else {
-            return false;
+            return "accept_false";
         }
     }
 
@@ -165,58 +174,33 @@ public class AdminServiceImpl implements AdminService {
         Date startDate = request.getAbsenceOutside().getStartDate();
         Date endDate = request.getAbsenceOutside().getEndDate();
         if(removeTime(startDate).after(removeTime(endDate))) return false;
-        if(!removeTime(endDate).after(new Date(new Date().getTime()+7*3600*1000))){   //tại thời điểm duyệt chứa chỉ các ngày xin phép trong quá khứ
-            List<TimeKeeping> timeKeepingList = timeKeepingRepository
-                    .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
-                            (request.getUser(),
-                                    removeTime(startDate)
-                                    , removeTime(endDate));
-            if(timeKeepingList.size()<1) return false;
-            for (TimeKeeping timeKeeping : timeKeepingList) {
+
+        for (Date date = removeTime(startDate); !date.after(removeTime(endDate));
+             date.setTime(date.getTime() + 86_400_000)) {
+            try {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                List<TimeKeeping> timeKeepingList = timeKeepingRepository
+                        .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
+                                (request.getUser(),
+                                        simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
+                                        simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59"));
+                TimeKeeping timeKeeping;
+                if(timeKeepingList.size()<1){
+                    timeKeeping = new TimeKeeping();
+                    timeKeeping.setUser(request.getUser());
+                    Date date2 = new Date(date.getTime());
+                    timeKeeping.setDate(date2);
+                }else{
+                    timeKeeping=timeKeepingList.get(0);
+                }
                 timeKeeping.setRequest(request);
                 timeKeepingRepository.save(timeKeeping);
+            }catch (Exception ex){
+                ex.printStackTrace();
+                return false;
             }
-            return true;
         }
-        else if (removeTime(startDate).before(new Date(new Date().getTime()+7*3600*1000))) {       //thời gian duyệt request chứa ngày xin phép trong quá khứ và tương lai
-            //set Request cho những ngày đã qua - hôm nay
-            List<TimeKeeping> timeKeepingList = timeKeepingRepository
-                    .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
-                            (request.getUser(),
-                                    removeTime(startDate)
-                                    , new Date());
-            for (TimeKeeping timeKeeping : timeKeepingList) {
-                timeKeeping.setRequest(request);
-                timeKeepingRepository.save(timeKeeping);
-            }
-
-            //set Request cho ngày mai - enddate
-            Date date;
-            for (date = removeTime(new Date(new Date().getTime() + 86_400_000 +7*3600*1000)); !date.after(removeTime(endDate));
-                 date.setTime(date.getTime() + 86_400_000)) {
-                TimeKeeping timeKeeping = new TimeKeeping();
-                timeKeeping.setUser(request.getUser());
-                Date date2=new Date(date.getTime());
-                timeKeeping.setDate(date2);
-                timeKeeping.setRequest(request);
-                timeKeepingRepository.save(timeKeeping);
-            }
-
-            return true;
-        } else {  //thời gian duyệt request chỉ chứa ngày trong tương lai
-            for (Date date = removeTime(startDate); !date.after(removeTime(endDate));
-                 date.setTime(date.getTime() + 86_400_000)) {
-                TimeKeeping timeKeeping =new TimeKeeping();
-                timeKeeping.setUser(request.getUser());
-                Date date2=new Date(date.getTime());
-                timeKeeping.setDate(date2);
-                timeKeeping.setRequest(request);
-                timeKeepingRepository.save(timeKeeping);
-                System.out.println("thoi gian: "+date.toString());
-            }
-
-            return true;
-        }
+        return true;
     }
 
     public Date removeTime(Date date) {
@@ -235,23 +219,30 @@ public class AdminServiceImpl implements AdminService {
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             Date date = request.getLateEarly().getDate();
-            if (removeTime(date).before(new Date())) {
-                TimeKeeping timeKeeping = timeKeepingRepository
-                        .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
-                                (request.getUser(),
-                                        simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
-                                        simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59")).get(0);
-
-                timeKeeping.setRequest(request);
-                timeKeepingRepository.save(timeKeeping);
-            } else {
-                TimeKeeping timeKeeping = new TimeKeeping();
+            List<TimeKeeping> timeKeepingList = timeKeepingRepository
+                    .findByUserAndDateGreaterThanEqualAndDateLessThanEqual
+                            (request.getUser(),
+                                    simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
+                                    simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59"));
+            TimeKeeping timeKeeping;
+            if (timeKeepingList.size()<1) {
+                timeKeeping = new TimeKeeping();
                 timeKeeping.setUser(request.getUser());
                 timeKeeping.setDate(removeTime(date));
-                timeKeeping.setRequest(request);
-                timeKeepingRepository.save(timeKeeping);
+            } else {
+                timeKeeping = timeKeepingList.get(0);
+                if(timeKeeping.getRequest()!=null && timeKeeping.getRequest().getLateEarly()!=null){
+                    LateEarly lateEarly=timeKeeping.getRequest().getLateEarly();
+                    if(request.getLateEarly().getTimeLate()!=0)
+                        lateEarly.setTimeLate(request.getLateEarly().getTimeLate());
+                    else if(request.getLateEarly().getTimeEarly()!=0)
+                        lateEarly.setTimeEarly(request.getLateEarly().getTimeEarly());
+                    lateEarlyRepository.save(lateEarly);
+                    return  true;
+                }
             }
-
+            timeKeeping.setRequest(request);
+            timeKeepingRepository.save(timeKeeping);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -259,7 +250,7 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-    public boolean checkoutSupport(Request request) {
+    public String checkoutSupport(Request request) {
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat stringToDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -269,15 +260,15 @@ public class AdminServiceImpl implements AdminService {
                             (request.getUser(),
                                     simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),
                                     simpleDateFormat.parse(simpleDateFormat.format(date) + " 23:59:59")).get(0);
+            if(timeKeeping.getCheckin()==null) return "checkin_is_null";
             timeKeeping.setCheckout(stringToDate.parse(simpleDateFormat.format(date) + " 18:00:00"));
-            timeKeeping.setRequest(request);
+            //timeKeeping.setRequest(request);
             timeKeepingRepository.save(timeKeeping);
 
-            return true;
+            return "accept_successfully";
         } catch (Exception e) {
             e.printStackTrace();
-
-            return false;
+            return "accept_false";
         }
     }
 

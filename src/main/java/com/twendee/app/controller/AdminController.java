@@ -30,20 +30,12 @@ public class AdminController {
 
     @GetMapping("/accept/{id}")
     public ResponseEntity<?> acceptRequest(@PathVariable Integer id) {
-        if (adminService.acceptRequest(id)) {
-            return ResponseEntity.ok("accept_successfully");
-        } else {
-            return ResponseEntity.ok("accept_false");
-        }
+        return ResponseEntity.ok(new Message(adminService.acceptRequest(id)));
     }
 
     @GetMapping("/refuse/{id}")
     public ResponseEntity<?> refuseRequest(@PathVariable Integer id) {
-        if (adminService.refuseRequest(id)) {
-            return ResponseEntity.ok("refuse_successfully");
-        } else {
-            return ResponseEntity.ok("refuse_false");
-        }
+        return ResponseEntity.ok(new Message(adminService.refuseRequest(id)));
     }
 
     @GetMapping(value = "/time-keepings", params = "date")
