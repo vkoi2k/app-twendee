@@ -47,5 +47,10 @@ public interface RequestRepository extends JpaRepository<Request, Integer> {
 
     List<Request> findAllByDeletedFalse(Sort sort);
 
+    List<Request> findAllByTimeRequestBetween( Date minDate, Date maxDate);
+
+    Page<Request> findAllByTimeRequestBetween( Date minDate, Date maxDate, Pageable pageable);
+
+
 
 }

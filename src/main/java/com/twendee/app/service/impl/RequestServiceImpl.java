@@ -303,13 +303,13 @@ public class RequestServiceImpl implements RequestService {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             List<Request> requestList;
             if (page != null && limit != null) {
-                Page<Request> requestPage = requestRepository.findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqual
+                Page<Request> requestPage = requestRepository.findAllByTimeRequestBetween
                         (simpleDateFormat.parse(simpleDateFormat.format(dateMin) + " 00:00:00"),
                                 simpleDateFormat.parse(simpleDateFormat.format(dateMax) + " 23:59:59"),
                                 PageRequest.of(page, limit));
                 requestList = requestPage.toList();
             } else {
-                requestList = requestRepository.findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqual
+                requestList = requestRepository.findAllByTimeRequestBetween
                         (simpleDateFormat.parse(simpleDateFormat.format(dateMin) + " 00:00:00"),
                                 simpleDateFormat.parse(simpleDateFormat.format(dateMax) + " 23:59:59"));
             }
