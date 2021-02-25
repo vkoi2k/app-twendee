@@ -1,9 +1,6 @@
 package com.twendee.app.service.impl;
 
-import com.twendee.app.model.dto.Message;
-import com.twendee.app.model.dto.SendRequestAbsenceOutsideDTO;
-import com.twendee.app.model.dto.SendRequestCheckOutDTO;
-import com.twendee.app.model.dto.SendRequestLateEarlyDTO;
+import com.twendee.app.model.dto.*;
 import com.twendee.app.model.entity.*;
 import com.twendee.app.reponsitory.SendRequestRepository;
 import com.twendee.app.reponsitory.UserRepository;
@@ -11,6 +8,7 @@ import com.twendee.app.service.SendRequestService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -28,7 +26,7 @@ public class SendRequestServiceImpl implements SendRequestService {
     }
 
     @Override
-    public Message absenceOutside(SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO) {
+    public ResponseEntity<?> absenceOutside(SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO) {
         try {
             User user = userRepository.getUserByEmailAndDeletedFalse(sendRequestAbsenceOutsideDTO.getEmail());
             ModelMapper modelMapper = new ModelMapper();
@@ -36,15 +34,15 @@ public class SendRequestServiceImpl implements SendRequestService {
             request.setTimeRequest(new Date());
             request.setUser(user);
             sendRequestRepository.save(request);
-            return new Message("Send request successfully, requestId: "+request.getRequestId());
+            return ResponseEntity.ok(new RequestDTO(request));
         }catch (Exception e){
             e.printStackTrace();
-            return new Message("Send request failed");
+            return ResponseEntity.ok(new Message("Send request failed"));
         }
     }
 
     @Override
-    public Message lateEarly(SendRequestLateEarlyDTO sendRequestLateEarlyDTO) {
+    public ResponseEntity<?> lateEarly(SendRequestLateEarlyDTO sendRequestLateEarlyDTO) {
         try {
             User user = userRepository.getUserByEmailAndDeletedFalse(sendRequestLateEarlyDTO.getEmail());
             ModelMapper modelMapper = new ModelMapper();
@@ -55,15 +53,15 @@ public class SendRequestServiceImpl implements SendRequestService {
             request.setTimeRequest(new Date());
             request.setUser(user);
             sendRequestRepository.save(request);
-            return new Message("Send request successfully, requestId: "+request.getRequestId());
+            return ResponseEntity.ok(new RequestDTO(request));
         }catch (Exception e){
             e.printStackTrace();
-            return new Message("Send request failed");
+            return ResponseEntity.ok(new Message("Send request failed"));
         }
     }
 
     @Override
-    public Message checkOutSupport(SendRequestCheckOutDTO sendRequestCheckOutDTO) {
+    public ResponseEntity<?> checkOutSupport(SendRequestCheckOutDTO sendRequestCheckOutDTO) {
         try {
             User user = userRepository.getUserByEmailAndDeletedFalse(sendRequestCheckOutDTO.getEmail());
             ModelMapper modelMapper = new ModelMapper();
@@ -74,10 +72,10 @@ public class SendRequestServiceImpl implements SendRequestService {
             request.setTimeRequest(new Date());
             request.setUser(user);
             sendRequestRepository.save(request);
-            return new Message("Send request successfully, requestId: "+request.getRequestId());
+            return ResponseEntity.ok(new RequestDTO(request));
         }catch (Exception e){
             e.printStackTrace();
-            return new Message("Send request failed");
+            return ResponseEntity.ok(new Message("Send request failed"));
         }
     }
 }

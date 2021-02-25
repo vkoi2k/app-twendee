@@ -22,24 +22,24 @@ public class SendRequestController {
     }
 
     @PostMapping("/day-off")
-    public Message createRequestDayOff(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
+    public ResponseEntity<?> createRequestDayOff(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
         sendRequestAbsenceOutsideDTO.setType(true);
         return sendRequestService.absenceOutside(sendRequestAbsenceOutsideDTO);
     }
 
     @PostMapping("/late-early")
-    public Message createRequestLateEarly(@RequestBody SendRequestLateEarlyDTO sendRequestLateEarlyDTO){
+    public ResponseEntity<?> createRequestLateEarly(@RequestBody SendRequestLateEarlyDTO sendRequestLateEarlyDTO){
         return sendRequestService.lateEarly(sendRequestLateEarlyDTO);
     }
 
     @PostMapping("/out-side")
-    public Message createRequestOutSide(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
+    public ResponseEntity<?> createRequestOutSide(@RequestBody SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO){
         sendRequestAbsenceOutsideDTO.setType(false);
         return sendRequestService.absenceOutside(sendRequestAbsenceOutsideDTO);
     }
 
     @PostMapping("/check-out")
-    public Message createRequestCheckOut(@RequestBody SendRequestCheckOutDTO sendRequestCheckOutDTO){
+    public ResponseEntity<?> createRequestCheckOut(@RequestBody SendRequestCheckOutDTO sendRequestCheckOutDTO){
         return sendRequestService.checkOutSupport(sendRequestCheckOutDTO);
     }
 }
