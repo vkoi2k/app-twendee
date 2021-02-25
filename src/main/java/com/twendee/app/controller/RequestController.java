@@ -39,9 +39,25 @@ public class RequestController {
 
 
                 }
-        } else
+        }
+
+        else
             {
-            return requestService.findByType(type, page, limit);
+                switch (isAccepted){
+                    case 1:
+                        return requestService.findByIsAcceptAndType(isAccepted,type,page, limit);
+
+                    case 0:
+                        return requestService.findByIsAcceptAndType(isAccepted,type,page, limit);
+
+
+                    default:
+                        return requestService.findByType(type, page, limit);
+
+
+                }
+
+
         }
 //        else {
 //            return requestService.findAll(page, limit);

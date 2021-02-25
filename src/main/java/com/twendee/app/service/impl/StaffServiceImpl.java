@@ -169,7 +169,13 @@ public class StaffServiceImpl implements StaffService {
             User user = modelMapper.map(inputUserDTO, User.class);
             user.setUserId(oldUser.getUserId());
             user.setRole(oldUser.isRole());
-            user.setPass(oldUser.getPass());
+            String newPass = user.getPass();
+            if(newPass.equals(oldUser.getPass())){
+                user.setPass(oldUser.getPass());
+            }
+            else {
+                user.setPass(passwordEncoder.encode(newPass));
+            }
             user.setDob(new Date(inputUserDTO.getBirthday()));
             if(!inputUserDTO.getEmail().equals(oldUser.getEmail())){
                 return ResponseEntity.ok(new Message("You may not change your email"));
