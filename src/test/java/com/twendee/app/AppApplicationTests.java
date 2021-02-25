@@ -1,6 +1,7 @@
 package com.twendee.app;
 
 import com.twendee.app.component.MailSender;
+import com.twendee.app.model.dto.SendRequestAbsenceOutsideDTO;
 import com.twendee.app.model.entity.Request;
 import com.twendee.app.model.entity.TimeKeeping;
 import com.twendee.app.model.entity.User;
@@ -9,6 +10,7 @@ import com.twendee.app.reponsitory.TimeKeepingRepository;
 import com.twendee.app.reponsitory.UserRepository;
 import com.twendee.app.service.StaffService;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
@@ -58,13 +60,23 @@ class AppApplicationTests {
 
     @Test
     void testList(){
-        Optional<Request> optionalRequest = requestRepository.findById(1);
-        Request request=optionalRequest.get();
-        TimeKeeping timeKeeping =new TimeKeeping();
-        timeKeeping.setUser(request.getUser());
-        timeKeeping.setDate(new Date());
-        timeKeeping.setRequest(request);
-        timeKeepingRepository.save(timeKeeping);
+        SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO=new SendRequestAbsenceOutsideDTO();
+        sendRequestAbsenceOutsideDTO.setEmail("honganh01@gmail.com");
+        sendRequestAbsenceOutsideDTO.setStartDate(1613757000000L);
+        sendRequestAbsenceOutsideDTO.setEndDate(1613758000000L);
+        sendRequestAbsenceOutsideDTO.setReason("Việt Thắng");
+        sendRequestAbsenceOutsideDTO.setType(false);
+
+        ModelMapper modelMapper=new ModelMapper();
+        Request request=modelMapper.map(sendRequestAbsenceOutsideDTO, Request.class);
+        request.setTimeRequest(new Date());
+        request.setUser(userRepository.getUserByEmailAndDeletedFalse(sendRequestAbsenceOutsideDTO.getEmail()));
+        requestRepository.save(request);
+
+        System.out.println("id: "+request.getRequestId());
+        System.out.println("absent id: "+request.getAbsenceOutside().getAbsenceOutsideId());
+        System.out.println("start: "+request.getAbsenceOutside().getStartDate());
+        System.out.println("end: "+request.getAbsenceOutside().getEndDate());
     }
 
     public Date removeTime(Date date){

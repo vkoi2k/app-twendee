@@ -1,16 +1,14 @@
 package com.twendee.app.service;
 
-import com.twendee.app.model.dto.Message;
-import com.twendee.app.model.dto.SendRequestAbsenceOutsideDTO;
-import com.twendee.app.model.dto.SendRequestCheckOutDTO;
-import com.twendee.app.model.dto.SendRequestLateEarlyDTO;
+import com.twendee.app.model.dto.*;
+import org.springframework.http.ResponseEntity;
 
 public interface SendRequestService {
 
-    Message absenceOutside(SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO);
+    ResponseEntity<?> absenceOutside(SendRequestAbsenceOutsideDTO sendRequestAbsenceOutsideDTO);
 
-    Message lateEarly(SendRequestLateEarlyDTO sendRequestLateEarlyDTO);
+    ResponseEntity<?> lateEarly(SendRequestLateEarlyDTO sendRequestLateEarlyDTO);
 
-    Message checkOutSupport(SendRequestCheckOutDTO sendRequestCheckOutDTO);
+    ResponseEntity<?> checkOutSupport(SendRequestCheckOutDTO sendRequestCheckOutDTO);
 //    User findByEmail(String email);
 }
