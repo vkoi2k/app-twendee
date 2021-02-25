@@ -221,24 +221,34 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<RequestDTO> findByIsAcceptAndType(Boolean isAccept, String type, Integer page, Integer limit) {
+    public List<RequestDTO> findByIsAcceptAndType(Integer isAccept, String type, Integer page, Integer limit) {
         List<Request> requests;
         if (page != null && limit != null) {
-            if (isAccept == true) {
+            if (isAccept == 1) {
                 Page<Request> pages = requestRepository.
                         findByIsAcceptTrueAndDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
                 requests = pages.toList();
-            } else {
+            }else if( isAccept == 0) {
                 Page<Request> pages = requestRepository.
                         findByIsAcceptFalseAndDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
                 requests = pages.toList();
             }
+            else
+            {
+                Page<Request> pages = requestRepository.
+                        findAllByDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
+                requests = pages.toList();
+            }
         } else {
-            if (isAccept == true){
+            if (isAccept == 1){
                 requests = requestRepository.findByIsAcceptTrueAndDeletedFalse(Sort.by("requestId"));
             }
-            else {
+            else if( isAccept == 0){
                 requests = requestRepository.findByIsAcceptFalseAndDeletedFalse(Sort.by("requestId"));
+            }
+            else {
+
+                requests = requestRepository.findAllByDeletedFalse(Sort.by("requestId"));
             }
 
         }

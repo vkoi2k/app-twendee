@@ -23,22 +23,29 @@ public class RequestController {
     @GetMapping("/requests")
     public List<RequestDTO> findByIsAcceptAndType(@RequestParam(value = "page", required = false) Integer page,
                                                   @RequestParam(value = "limit", required = false) Integer limit,
-                                                  @RequestParam(value = "isAccepted", required = false) Boolean isAccepted,
-                                                  @RequestParam(value = "type", required = false) String type) {
-        if (isAccepted != null && type == null) {
-            if (isAccepted == true) {
-                return requestService.findByIsAcceptTrue(page, limit);
-            } else {
-                return requestService.findByIsAcceptFalse(page, limit);
-            }
-        } else if (type != null && isAccepted == null) {
-            return requestService.findByType(type, page, limit);
-        } else if (type != null && isAccepted != null) {
-            return requestService.findByIsAcceptAndType(isAccepted, type, page, limit);
+                                                  @RequestParam(value = "isAccepted",defaultValue = "-1") Integer isAccepted,
+                                                  @RequestParam(value = "type",defaultValue = "0") String type) {
+        if ( type.equals("0")) {
+            switch (isAccepted){
+                case 1:
+                    return requestService.findByIsAcceptTrue(page, limit);
 
-        } else {
-            return requestService.findAll(page, limit);
+                case 0:
+                    return requestService.findByIsAcceptFalse(page, limit);
+
+
+                default:
+                    return requestService.findAll(page,limit);
+
+
+                }
+        } else
+            {
+            return requestService.findByType(type, page, limit);
         }
+//        else {
+//            return requestService.findAll(page, limit);
+//        }
     }
 
     @GetMapping("/requests/{id}")
@@ -73,17 +80,16 @@ public class RequestController {
              @RequestParam(value = "dateMax", required = false) Long dateMax,
              @RequestParam(required = false) Integer page,
              @RequestParam(required = false) Integer limit) {
-       if (dateMax == null){
-           return requestService.getListRequestByDate(page, limit, dateMin, dateMin);
-       }
-       else{
-           return requestService.getListRequestByDate(page, limit, dateMin, dateMax);
-       }
+        if (dateMax == null) {
+            return requestService.getListRequestByDate(page, limit, dateMin, dateMin);
+        } else {
+            return requestService.getListRequestByDate(page, limit, dateMin, dateMax);
+        }
 
     }
 
     @DeleteMapping("/requests/{id}")
-    public Message delete(@PathVariable Integer id){
+    public Message delete(@PathVariable Integer id) {
         return requestService.delete(id);
     }
 

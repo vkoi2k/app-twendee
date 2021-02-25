@@ -19,7 +19,7 @@ public interface RequestService {
 
     List<RequestDTO> findByType(String type, Integer page, Integer limit);
 
-    List<RequestDTO> findByIsAcceptAndType(Boolean isAccept , String type , Integer page , Integer limit);
+    List<RequestDTO> findByIsAcceptAndType(Integer isAccept , String type , Integer page , Integer limit);
 
     List<RequestDTO> getListRequestByDate(Integer page, Integer limit, long dateIntMin, long dateIntMax);
 
