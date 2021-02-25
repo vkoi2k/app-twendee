@@ -199,8 +199,9 @@ public class UserServiceImpl implements UserService {
             user.get().setPass(passwordEncoder.encode(newPass));
             userRepository.save(user.get());
             mailSender.send(user.get().getEmail(),
-                    "Reset password ",
-                    "New password: " + newPass
+                    "Quên mật khẩu đăng nhập",
+                    "<h2>Mật khẩu được thay đổi thành: " + newPass + "</h2>"
+                            + "<br/> Vui lòng ấn vào đường link sau để đăng nhập lại: <a href=\"http://54.179.166.125/\">Chuyển đến trang đăng nhập</a>."
             );
 
             return ResponseEntity.ok(new Message("successful"));

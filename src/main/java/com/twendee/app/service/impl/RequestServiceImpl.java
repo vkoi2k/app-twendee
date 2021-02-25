@@ -161,6 +161,25 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public List<RequestDTO> findByIsAcceptNull(Integer page, Integer limit) {
+        List<Request> requests;
+        if (page != null && limit != null) {
+            Page<Request> pages = requestRepository.
+                    findByIsAcceptNullAndDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
+            requests = pages.toList();
+        } else {
+            requests = requestRepository.findByIsAcceptNullAndDeletedFalse(Sort.by("requestId"));
+        }
+
+        List<RequestDTO> requestDTOS = new ArrayList<>();
+        for (Request request : requests) {
+            requestDTOS.add(new RequestDTO(request));
+        }
+        return requestDTOS;
+    }
+
+
+    @Override
     public List<RequestDTO> findByType(String type, Integer page, Integer limit) {
         List<Request> requests;
         if (page != null && limit != null) {
@@ -232,7 +251,12 @@ public class RequestServiceImpl implements RequestService {
                 Page<Request> pages = requestRepository.
                         findByIsAcceptFalseAndDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
                 requests = pages.toList();
+            }else if ( isAccept == 2){
+                Page<Request> pages = requestRepository.
+                        findByIsAcceptNullAndDeletedFalse(PageRequest.of(page, limit, Sort.by("requestId")));
+                requests = pages.toList();
             }
+
             else
             {
                 Page<Request> pages = requestRepository.
@@ -245,6 +269,9 @@ public class RequestServiceImpl implements RequestService {
             }
             else if( isAccept == 0){
                 requests = requestRepository.findByIsAcceptFalseAndDeletedFalse(Sort.by("requestId"));
+            }
+            else if( isAccept == 2){
+                requests = requestRepository.findByIsAcceptNullAndDeletedFalse(Sort.by("requestId"));
             }
             else {
 
@@ -304,6 +331,21 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public List<RequestDTO> findByIsAccpetAndDate(Integer isAccept, long dateIntMin, long dateIntMax, Integer page, Integer limit) {
+        return null;
+    }
+
+    @Override
+    public List<RequestDTO> findByTypeAndDate(String type, long dateIntMin, long dateIntMax, Integer page, Integer limit) {
+        return null;
+    }
+
+    @Override
+    public List<RequestDTO> findByIsAccpetAndTypeAndDate(Integer isAccpet, String type, long dateIntMin, long dateIntMax, Integer page, Integer limit) {
+        return null;
+    }
+
+    @Override
     public List<RequestDTO> getListRequestByDate(Integer page, Integer limit, long dateIntMin, long dateIntMax) {
         try {
             Date dateMin = new Date(dateIntMin);
@@ -313,13 +355,13 @@ public class RequestServiceImpl implements RequestService {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             List<Request> requestList;
             if (page != null && limit != null) {
-                Page<Request> requestPage = requestRepository.findAllByTimeRequestBetween
+                Page<Request> requestPage = requestRepository.findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqualAndDeletedFalse
                         (simpleDateFormat.parse(simpleDateFormat.format(dateMin) + " 00:00:00"),
                                 simpleDateFormat.parse(simpleDateFormat.format(dateMax) + " 23:59:59"),
                                 PageRequest.of(page, limit));
                 requestList = requestPage.toList();
             } else {
-                requestList = requestRepository.findAllByTimeRequestBetween
+                requestList = requestRepository.findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqualAndDeletedFalse
                         (simpleDateFormat.parse(simpleDateFormat.format(dateMin) + " 00:00:00"),
                                 simpleDateFormat.parse(simpleDateFormat.format(dateMax) + " 23:59:59"));
             }

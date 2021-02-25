@@ -21,25 +21,29 @@ public interface RequestRepository extends JpaRepository<Request, Integer> {
 
     List<Request> findByIsAcceptFalseAndDeletedFalse(Sort sort);
 
-    Page<Request> findByLateEarlyIsNotNull(Pageable pageable);
+    Page<Request> findByIsAcceptNullAndDeletedFalse(Pageable pageable);
 
-    List<Request> findByLateEarlyIsNotNull(Sort sort);
+    List<Request> findByIsAcceptNullAndDeletedFalse(Sort sort);
 
-    Page<Request> findByCheckoutSupportIsNotNull(Pageable pageable);
 
-    List<Request> findByCheckoutSupportIsNotNull(Sort sort);
-
-    Page<Request> findByAbsenceOutsideIsNotNull(Pageable pageable);
-
-    List<Request> findByAbsenceOutsideIsNotNull(Sort sort);
-
-    List<Request> findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqual(
+    List<Request> findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqualAndDeletedFalse(
             Date minDate, Date maxDate
     );
 
-    Page<Request> findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqual(
+    Page<Request> findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqualAndDeletedFalse(
             Date minDate, Date maxDate, Pageable pageable
     );
+
+    List<Request> findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqualAndDeletedFalseAndIsAcceptTrue(
+            Date minDate, Date maxDate
+    );
+
+    Page<Request> findByTimeRequestGreaterThanEqualAndTimeRequestLessThanEqualAndDeletedFalseAndIsAcceptFalse(
+            Date minDate, Date maxDate, Pageable pageable
+    );
+
+
+
 
     Request findByRequestIdAndDeletedFalse(Integer requestId);
 
