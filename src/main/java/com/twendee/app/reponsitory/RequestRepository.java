@@ -51,6 +51,9 @@ public interface RequestRepository extends JpaRepository<Request, Integer> {
 
     Page<Request> findAllByTimeRequestBetween( Date minDate, Date maxDate, Pageable pageable);
 
+    List<Request> findByUser_EmailLike(String email);
+    Page<Request> findByUser_EmailLike(String email, Pageable pageable);
+
 
 
 }

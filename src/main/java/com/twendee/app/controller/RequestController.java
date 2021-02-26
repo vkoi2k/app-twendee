@@ -87,5 +87,12 @@ public class RequestController {
         return requestService.delete(id);
     }
 
+    @GetMapping(value = "/requests", params = "search")
+    public List<RequestDTO> searchRequest(@RequestParam String search,
+                                          @RequestParam(required = false) Integer page,
+                                          @RequestParam(required = false) Integer limit){
+        return requestService.searchRequest(search, page,limit);
+    }
+
 
 }

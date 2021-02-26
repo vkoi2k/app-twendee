@@ -63,7 +63,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private boolean gender;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<TimeKeeping> timeKeepings;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER,cascade=CascadeType.ALL)

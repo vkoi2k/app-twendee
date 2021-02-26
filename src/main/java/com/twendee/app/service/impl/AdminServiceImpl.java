@@ -276,8 +276,12 @@ public class AdminServiceImpl implements AdminService {
     public List<TimeKeepingDTO> getListTimekeepingByDate(Integer page, Integer limit, long dateInt) {
         try {
             Date date = new Date(dateInt+7*3600*1000);
+            Date tomorrow=removeTime(new Date(System.currentTimeMillis()+31*3600*1000));
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             List<TimeKeeping> timeKeepingList;
+
+            if(!date.before(tomorrow)) return new ArrayList<>();
+
             if (page != null && limit != null) {
                 Page<TimeKeeping> timeKeepingPage = timeKeepingRepository.findByDateGreaterThanEqualAndDateLessThanEqual
                         (simpleDateFormat.parse(simpleDateFormat.format(date) + " 00:00:00"),

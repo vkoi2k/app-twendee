@@ -24,4 +24,6 @@ public interface RequestService {
     List<RequestDTO> getListRequestByDate(Integer page, Integer limit, long dateIntMin, long dateIntMax);
 
     Message delete(Integer id);
+
+    List<RequestDTO> searchRequest(String search, Integer page, Integer limit);
 }
