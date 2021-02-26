@@ -138,15 +138,26 @@ public class StaffServiceImpl implements StaffService {
     //search for staff by name
     @Override
     public List<UserDTO> search(String KeyWord, Integer page, Integer limit) {
-        List<User> users;
-        if(page!=null && limit !=null){
-            Page<User> userPage=userRepository.
-                    findByDeletedFalseAndNameLike
-                            ("%" + KeyWord + "%", PageRequest.of(page, limit));
-            users= userPage.toList();
-        }else
-         users = userRepository.findByDeletedFalseAndNameLike(
+        List<User> users= userRepository.findByDeletedFalseAndNameLike(
                 "%" + KeyWord + "%");
+        List<User> usersEmail= userRepository.findByDeletedFalseAndEmailLike(
+                "%" + KeyWord + "%");
+        List<User> usersPhone= userRepository.findByDeletedFalseAndPhoneLike(
+                "%" + KeyWord + "%");
+
+        //kết hợp 3 list trên lại, loại bỏ phần tử trùng lặp
+        for(User user: usersEmail){
+            if(!users.contains(user)) users.add(user);
+        }
+        for(User user: usersPhone){
+            if(!users.contains(user)) users.add(user);
+        }
+
+        //phân trang
+        if(page!=null && limit !=null){
+            users=pageable(users, page, limit);
+        }
+
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT);
@@ -157,6 +168,16 @@ public class StaffServiceImpl implements StaffService {
             userDTOS.add(userDTO);
         }
         return userDTOS;
+    }
+
+    private List<User> pageable(List<User> users, Integer page, Integer limit){
+        List<User> returnList=new ArrayList<>();
+        if(page*limit>users.size()-1) return returnList;
+        int endIndex= Math.min((page + 1) * limit, users.size());
+        for(int i=page*limit;i<endIndex;i++){
+            returnList.add(users.get(i));
+        }
+        return returnList;
     }
 
     @Override

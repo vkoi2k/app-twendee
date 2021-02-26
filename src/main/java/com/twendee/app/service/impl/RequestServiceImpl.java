@@ -393,5 +393,22 @@ public class RequestServiceImpl implements RequestService {
 
     }
 
+    @Override
+    public List<RequestDTO> searchRequest(String search, Integer page, Integer limit) {
+        List<Request> requests;
+        if(page !=null && limit !=null){
+            Page<Request> requestPage=requestRepository.findByUser_EmailLike("%"+search+"%",
+                    PageRequest.of(page,limit));
+            requests=requestPage.toList();
+        }else{
+            requests=requestRepository.findByUser_EmailLike("%"+search+"%");
+        }
+        List<RequestDTO> requestDTOList = new ArrayList<>();
+        for (Request request : requests) {
+            requestDTOList.add(new RequestDTO(request));
+        }
+        return requestDTOList;
+    }
+
 
 }
